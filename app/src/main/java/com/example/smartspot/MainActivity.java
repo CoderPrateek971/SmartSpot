@@ -1,12 +1,24 @@
 package com.example.smartspot;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.smartspot.api.ApiClient;
+import com.example.smartspot.api.ApiService;
+import com.example.smartspot.model.User;
+
+import java.util.List;
+
+import retrofit2.Callback;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +31,28 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+
+        apiService.getUsers().enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<User> users = response.body();
+
+                    for (User user : users) {
+                        Log.d("API_TEST", "Name: " + user.getFullName());
+                        Log.d("API_TEST", "Email: " + user.getEmail());
+                    }
+                } else {
+                    Log.d("API_TEST", "Response failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Log.e("API_TEST", "Error: " + t.getMessage());
+            }
         });
     }
 }
