@@ -3,6 +3,7 @@ package com.example.smartspot.api;
 import com.example.smartspot.model.User;
 import com.example.smartspot.model.VehicleType;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -15,10 +16,11 @@ public interface ApiService {
     @GET("users")
     Call<List<User>> getUsers();
 
-//    @POST("login")
-//    Call<LoginResponse> login(@Body LoginRequest request);
-
     @GET("vehicle-types")
     Call<List<VehicleType>> getVehicleTypes();
+
+
+    @POST("book_slot.php")
+    Call<String> bookSlot(@Body HashMap<String, Object> bookingData);
 
 }

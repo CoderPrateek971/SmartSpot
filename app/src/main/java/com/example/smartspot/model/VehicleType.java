@@ -13,11 +13,15 @@ public class VehicleType {
     @SerializedName("price_per_hour")
     private String price;
 
-    public String getTypeName() {
-        return typeName;
-    }
+    // --- Methods for BookingActivity ---
+    public int getVehicle_type_id() { return id; }
 
-    public String getPrice() {
-        return price;
-    }
+    public String getType_name() { return typeName; }
+
+    public String getPrice_per_hour() { return price; }
+
+    // --- Methods for HomeActivity ---
+    public String getTypeName() { return typeName; }
+
+    public String getPrice() { return price; }
 }
