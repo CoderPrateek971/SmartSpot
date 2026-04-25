@@ -15,13 +15,11 @@
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".PaymentActivity"
+            android:name=".ConfirmationActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".HomeActivity"-->
-<!--            android:exported="false" />-->
+
         <activity
-            android:name=".HomeActivity"
+            android:name=".PaymentActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +28,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".BookingActivity" />
+        <activity android:name=".HomeActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true" />
