@@ -48,10 +48,12 @@ public class PastBookingAdapter extends RecyclerView.Adapter<PastBookingAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         TextView tvSlot, tvDate, tvDuration, tvAmount, tvStatus;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
             tvSlot = itemView.findViewById(R.id.tvSlot);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvDuration = itemView.findViewById(R.id.tvDuration);

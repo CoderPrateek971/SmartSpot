@@ -1,46 +1,74 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:layout_marginBottom="12dp"
-    android:elevation="4dp">
 
-    <TextView
-        android:id="@+id/tvSlot"
-        android:text="Slot: A04"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:cardBackgroundColor="#F2F2F2">
 
-    <TextView
-        android:id="@+id/tvDate"
-        android:text="Date: 2026-02-17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="14dp">
 
-    <TextView
-        android:id="@+id/tvDuration"
-        android:text="Duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <!-- LEFT SIDE -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvAmount"
-        android:text="Amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tvSlot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Slot: A01"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000"/>
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:text="Status Completed"
-        android:textColor="#4CAF50"
-        android:background="#DFF5E3"
-        android:padding="6dp"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textColor="#555555"
+                android:layout_marginTop="6dp"/>
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tvDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duration"
+                android:textColor="#555555"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/tvAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount"
+                android:textColor="#555555"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- STATUS BUTTON -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status Completed"
+            android:textColor="#FFFFFF"
+            android:background="#4CAF50"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
