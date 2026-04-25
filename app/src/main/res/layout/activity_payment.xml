@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/backBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_back_arrow" />
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT PAYMENT METHOD"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/paymentGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <RadioButton
+            android:id="@+id/upi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="UPI"
+            android:padding="16dp"
+            android:background="@drawable/bg_buttom_card"
+            android:layout_marginBottom="10dp"/>
+
+        <RadioButton
+            android:id="@+id/card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Credit/Debit Card"
+            android:padding="16dp"
+            android:background="@drawable/bg_buttom_card"
+            android:layout_marginBottom="10dp"/>
+
+        <RadioButton
+            android:id="@+id/netbanking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Net Banking"
+            android:padding="16dp"
+            android:background="@drawable/bg_buttom_card"
+            android:layout_marginBottom="10dp"/>
+
+        <RadioButton
+            android:id="@+id/wallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wallet"
+            android:padding="16dp"
+            android:background="@drawable/bg_buttom_card"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/continueBtn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="CONTINUE"
+        android:background="@drawable/bg_button_green"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="30dp"/>
+</LinearLayout>
