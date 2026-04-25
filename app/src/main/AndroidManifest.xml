@@ -15,11 +15,13 @@
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".PaymentActivity"
+            android:name=".SignupActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".HomeActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".HomeActivity" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".HomeActivity"
             android:exported="true">
