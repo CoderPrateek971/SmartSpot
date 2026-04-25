@@ -18,7 +18,7 @@ public interface ApiService {
 //    @POST("login")
 //    Call<LoginResponse> login(@Body LoginRequest request);
 
-    @GET("getVehicleTypes.php")
+    @GET("vehicle-types")
     Call<List<VehicleType>> getVehicleTypes();
 
 }

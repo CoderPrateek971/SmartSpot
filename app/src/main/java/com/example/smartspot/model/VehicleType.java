@@ -1,16 +1,23 @@
 package com.example.smartspot.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class VehicleType {
 
-    private int vehicle_type_id;
-    private String type_name;
-    private double price_per_hour;
+    @SerializedName("vehicle_type_id")
+    private int id;
+
+    @SerializedName("type_name")
+    private String typeName;
+
+    @SerializedName("price_per_hour")
+    private String price;
 
     public String getTypeName() {
-        return type_name;
+        return typeName;
     }
 
-    public double getPrice() {
-        return price_per_hour;
+    public String getPrice() {
+        return price;
     }
 }

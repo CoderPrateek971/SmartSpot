@@ -16,6 +16,7 @@ import com.example.smartspot.api.ApiClient;
 import com.example.smartspot.api.ApiService;
 import com.example.smartspot.model.VehicleType;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         priceText = findViewById(R.id.priceText);
         bookBtn = findViewById(R.id.bookBtn);
 
+
         List<String> defaultList = new ArrayList<>();
         defaultList.add("Loading...");
 
@@ -56,9 +58,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
 
-                if (position > 0 && vehicleList != null && !vehicleList.isEmpty()) {
-                    VehicleType selected = vehicleList.get(position - 1);
-                    priceText.setText("Price: ₹" + selected.getPrice() + "/hr");
+                if (vehicleList != null && !vehicleList.isEmpty()) {
+                    VehicleType selected = vehicleList.get(position);
+                    priceText.setText("Price : Rs" + selected.getPrice() + "/hr");
+
                 } else {
                     priceText.setText("Price: ₹0/hr");
                 }
@@ -88,8 +91,12 @@ public class HomeActivity extends AppCompatActivity {
 
                     vehicleList = response.body();
 
+                    if (vehicleList.isEmpty()) {
+                        Toast.makeText(HomeActivity.this, "No vehicle data", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     List<String> names = new ArrayList<>();
-                    names.add("Select Vehicle");
 
                     for (VehicleType v : vehicleList) {
                         names.add(v.getTypeName());
@@ -102,6 +109,8 @@ public class HomeActivity extends AppCompatActivity {
                     );
 
                     vehicleSpinner.setAdapter(adapter);
+
+                    setDefaultCarSelection(names);
 
                     Log.d("API_DEBUG", "Data: " + vehicleList.toString());
 
@@ -117,4 +126,19 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setDefaultCarSelection(List<String> names) {
+        int index = 0;
+
+        for (int i = 0; i < names.size(); i++) {
+            if (names.get(i).equalsIgnoreCase("Car")) {
+                index = i;
+                break;
+            }
+        }
+
+        vehicleSpinner.setSelection(index);
+    }
+
+
 }
