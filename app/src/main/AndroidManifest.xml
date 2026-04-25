@@ -14,20 +14,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ConfirmationActivity"
+            android:exported="false" />
 
         <activity
-            android:name=".BookingSuccessActivity"
+            android:name=".PaymentActivity"
+            android:exported="true"/>
+
+        <activity android:name=".BookingActivity" />
+        <activity android:name=".HomeActivity" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BookingSuccessActivity"
+            android:exported="true"/>
 
-        <activity android:name=".PaymentActivity" android:exported="false" />
-        <activity android:name=".BookingActivity" android:exported="false" />
-        <activity android:name=".HomeActivity" android:exported="false" />
-        <activity android:name=".MainActivity" android:exported="false" />
 
     </application>
+
 </manifest>
