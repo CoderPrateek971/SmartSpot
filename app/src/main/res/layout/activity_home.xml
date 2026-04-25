@@ -2,53 +2,63 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo"/>
 
-    <FrameLayout
-        android:id="@+id/mapContainer"
-        android:layout_below="@id/searchBar"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="300dp" >
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/map_placeholder"/>
 
-        <EditText
-            android:id="@+id/searchBar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Search Slot"
-            android:padding="10dp" />
-    </FrameLayout>
+    <EditText
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:hint="Search Slot"
+        android:background="@drawable/rounded_edittext"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mapContainer"
-        android:layout_marginTop="187dp"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical"
+        android:background="@drawable/card_bg"
+        android:elevation="8dp"
         android:padding="16dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Select Vehicle Type"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
 
         <Spinner
             android:id="@+id/vehicleSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/priceText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Price: ₹0/hr" />
-
+            android:text="Price: ₹0/hr"
+            android:layout_marginBottom="20dp"/>
         <Button
             android:id="@+id/bookBtn"
+            android:text="BOOK NOW"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="BOOK NOW" />
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#00C853"
+            android:textColor="#FFFFFF"/>
     </LinearLayout>
 
 </RelativeLayout>
