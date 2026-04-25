@@ -1,9 +1,11 @@
 package com.example.smartspot.api;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-public class ApiClient {
-    private static final String BASE_URL = "http://10.0.2.2:3000/";
 
+public class ApiClient {
+
+    private static final String BASE_URL = "http://10.0.2.2:3000/";
     private static Retrofit retrofit;
 
     public static Retrofit getClient() {
