@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
+import android.content.Intent;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         String pass = password.getText().toString().trim();
 
         if (user.isEmpty() || pass.isEmpty()) {
-            Toast.makeText(this, "Enter all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Enter all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -68,11 +69,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     if (success) {
-                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-                        // 👉 MOVE TO NEXT SCREEN HERE
-                        // startActivity(new Intent(this, HomeActivity.class));
-
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
                         Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
                     }

@@ -43,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Button initialization
-        btnGoToBooking = findViewById(R.id.btnGoToBooking);
-
-        if (btnGoToBooking != null) {
-            btnGoToBooking.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, BookingActivity.class);
-                startActivity(intent);
-            });
-        }
+//        btnGoToBooking = findViewById(R.id.btnGoToBooking);
+//
+//        if (btnGoToBooking != null) {
+//            btnGoToBooking.setOnClickListener(v -> {
+//                Intent intent = new Intent(MainActivity.this, BookingActivity.class);
+//                startActivity(intent);
+//            });
+//        }
 
         // API CALL
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
