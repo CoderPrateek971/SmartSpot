@@ -67,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
 
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -76,6 +77,7 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, BookingActivity.class);
             startActivity(intent);
         });
+
     }
 
     private void loadVehicleTypes() {

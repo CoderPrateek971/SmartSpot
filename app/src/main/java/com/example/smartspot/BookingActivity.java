@@ -55,6 +55,8 @@ public class BookingActivity extends AppCompatActivity {
         loadVehicleTypes();
 
         btnConfirm.setOnClickListener(v -> bookSlot());
+
+
     }
 
     private void loadVehicleTypes() {

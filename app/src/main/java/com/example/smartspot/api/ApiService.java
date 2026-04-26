@@ -3,12 +3,14 @@ package com.example.smartspot.api;
 import com.example.smartspot.model.AdminDashboard;
 import com.example.smartspot.model.Booking;
 import com.example.smartspot.model.BookingResponse;
+import com.example.smartspot.model.SupportTicket;
 import com.example.smartspot.model.User;
 import com.example.smartspot.model.PastBooking;
 import com.example.smartspot.model.VehicleType;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -47,5 +49,11 @@ public interface ApiService {
 
     @GET("booking/{id}")
     Call<Booking> getBookingById(@Path("id") int id);
+
+    @POST("support/create")
+    Call<Map<String, Object>> createComplaint(@Body Map<String, Object> body);
+
+    @GET("support/user/{userId}")
+    Call<List<SupportTicket>> getUserComplaints(@Path("userId") int userId);
 
 }

@@ -14,13 +14,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SupportActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-         <!-- ONLY ONE LAUNCHER ACTIVITY -->
+        <!-- ONLY ONE LAUNCHER ACTIVITY -->
         <activity
             android:name=".ActiveBookingActivity"
-            android:exported="false"/>
-            <!-- All other activities -->
+            android:exported="false" /> <!-- All other activities -->
         <activity
             android:name=".PastBookingsActivity"
             android:exported="false" />
@@ -47,7 +54,8 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".BookingSuccessActivity"
             android:exported="false" />
@@ -56,13 +64,7 @@
             android:exported="false" />
         <activity
             android:name=".AdminDashboardActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
     </application>
 
 </manifest>
