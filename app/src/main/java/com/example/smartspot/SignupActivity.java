@@ -1,5 +1,6 @@
 package com.example.smartspot;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -20,7 +21,7 @@ public class SignupActivity extends AppCompatActivity {
     AutoCompleteTextView spVehicle;
     Button btnSignup;
 
-    String[] types = {"Bike", "Car", "SUV"};
+    String[] types = {"Bike", "Car"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,9 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void sendDataToServer(String name, String email, String password, String phone, String vehicle) {
-        String url = "http://10.7.34.70/signup";
+
+        String url = "http://10.7.34.70:3000/signup";
+
         JSONObject json = new JSONObject();
         try {
             json.put("full_name", name);
@@ -78,9 +81,21 @@ public class SignupActivity extends AppCompatActivity {
             json.put("vehicle", vehicle);
         } catch (Exception e) { e.printStackTrace(); }
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json,
-                response -> Toast.makeText(SignupActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show(),
-                error -> Toast.makeText(SignupActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show());
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                json,
+                response -> {
+                    Toast.makeText(SignupActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                },
+                error -> {
+                    Toast.makeText(SignupActivity.this, "User Already Exist", Toast.LENGTH_SHORT).show();
+                }
+        );
 
         Volley.newRequestQueue(this).add(request);
     }
