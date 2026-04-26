@@ -1,14 +1,12 @@
 package com.example.smartspot;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.smartspot.model.PastBooking;
-
 import java.util.List;
 
 public class PastBookingAdapter extends RecyclerView.Adapter<PastBookingAdapter.ViewHolder> {
@@ -33,13 +31,30 @@ public class PastBookingAdapter extends RecyclerView.Adapter<PastBookingAdapter.
         holder.tvSlot.setText("Slot: " + b.getSlot_number());
         holder.tvDate.setText("Date: " + b.getDate());
 
-        double hours = Double.parseDouble(b.getTotal_hours());
-        int h = (int) hours;
-        int mins = (int)((hours - h) * 60);
+        try {
+            double hours = Double.parseDouble(b.getTotal_hours());
+            int h = (int) hours;
+            int mins = (int)((hours - h) * 60);
+            holder.tvDuration.setText("Duration: " + h + " hr " + mins + " mins");
+        } catch (Exception e) {
+            holder.tvDuration.setText("Duration: " + b.getTotal_hours());
+        }
 
-        holder.tvDuration.setText("Duration: " + h + " hr " + mins + " mins");
         holder.tvAmount.setText("Amount Paid: ₹" + b.getTotal_amount());
-        holder.tvStatus.setText("Status Completed");
+
+        String status = b.getBooking_status();
+        if (status != null && !status.isEmpty()) {
+            String capitalizedStatus = status.substring(0, 1).toUpperCase() + status.substring(1).toLowerCase();
+            holder.tvStatus.setText("Status: " + capitalizedStatus);
+        } else {
+            holder.tvStatus.setText("Status: Unknown");
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ConfirmationActivity.class);
+            intent.putExtra("booking_id", b.getBooking_id());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -48,12 +63,10 @@ public class PastBookingAdapter extends RecyclerView.Adapter<PastBookingAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvSlot, tvDate, tvDuration, tvAmount, tvStatus;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             tvSlot = itemView.findViewById(R.id.tvSlot);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvDuration = itemView.findViewById(R.id.tvDuration);

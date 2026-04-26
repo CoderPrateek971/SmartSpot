@@ -1,5 +1,6 @@
 package com.example.smartspot.api;
 
+import com.example.smartspot.model.Booking;
 import com.example.smartspot.model.BookingResponse;
 import com.example.smartspot.model.User;
 import com.example.smartspot.model.PastBooking;
@@ -39,4 +40,8 @@ public interface ApiService {
     // ================= PAST BOOKINGS =================
     @GET("past-bookings/{user_id}")
     Call<List<PastBooking>> getPastBookings(@Path("user_id") int userId);
+
+    @GET("booking/{id}")
+    Call<Booking> getBookingById(@Path("id") int id);
+
 }
