@@ -3,8 +3,9 @@ package com.example.smartspot.api;
 import com.example.smartspot.model.AdminDashboard;
 import com.example.smartspot.model.Booking;
 import com.example.smartspot.model.BookingResponse;
-import com.example.smartspot.model.User;
 import com.example.smartspot.model.PastBooking;
+import com.example.smartspot.model.Slot;
+import com.example.smartspot.model.User;
 import com.example.smartspot.model.VehicleType;
 
 import java.util.HashMap;
@@ -26,8 +27,16 @@ public interface ApiService {
     @GET("vehicle-types")
     Call<List<VehicleType>> getVehicleTypes();
 
-    // ================= BOOK SLOT (UPDATED) =================
-    @POST("book-slot")   // ✅ MUST MATCH BACKEND
+    // ================= SLOTS =================
+    @GET("slots")
+    Call<List<Slot>> getSlots();
+
+    // ADD NEW SLOT (🔥 for + button)
+    @POST("add-slot")
+    Call<HashMap<String, Object>> addSlot(@Body HashMap<String, Object> data);
+
+    // ================= BOOK SLOT =================
+    @POST("book-slot")
     Call<BookingResponse> bookSlot(@Body HashMap<String, Object> bookingData);
 
     // ================= ACTIVE BOOKING =================
@@ -36,7 +45,7 @@ public interface ApiService {
 
     // ================= END BOOKING =================
     @POST("end-booking")
-    Call<String> endBooking(@Body HashMap<String, Object> data);
+    Call<HashMap<String, Object>> endBooking(@Body HashMap<String, Object> data);
 
     @GET("admin/dashboard")
     Call<AdminDashboard> getAdminDashboard();
