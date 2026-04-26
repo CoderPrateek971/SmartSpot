@@ -125,11 +125,13 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     // Useful for logging API requests in Logcat
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-
+    implementation("com.android.volley:volley:1.2.1")
     // QR Code Generation & Scanning
     // zxing-android-embedded is great for the UI
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     // core is needed for the actual QR logic
+    implementation("com.google.android.material:material:1.9.0")
+
     implementation("com.google.zxing:core:3.5.3")
 
 }
