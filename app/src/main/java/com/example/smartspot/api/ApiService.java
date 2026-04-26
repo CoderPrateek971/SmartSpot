@@ -1,5 +1,6 @@
 package com.example.smartspot.api;
 
+import com.example.smartspot.model.AdminDashboard;
 import com.example.smartspot.model.Booking;
 import com.example.smartspot.model.BookingResponse;
 import com.example.smartspot.model.User;
@@ -36,6 +37,9 @@ public interface ApiService {
     // ================= END BOOKING =================
     @POST("end-booking")
     Call<String> endBooking(@Body HashMap<String, Object> data);
+
+    @GET("admin/dashboard")
+    Call<AdminDashboard> getAdminDashboard();
 
     // ================= PAST BOOKINGS =================
     @GET("past-bookings/{user_id}")

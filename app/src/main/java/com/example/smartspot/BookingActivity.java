@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartspot.api.ApiClient;
 import com.example.smartspot.api.ApiService;
+import com.example.smartspot.model.AdminDashboard;
 import com.example.smartspot.model.BookingResponse;
 import com.example.smartspot.model.VehicleType;
 
@@ -174,5 +175,47 @@ public class BookingActivity extends AppCompatActivity {
 
         startActivity(intent);
         finish(); // Optional: Close this activity so back button doesn't return here
+    }
+
+    public static class AdminDashboardActivity extends AppCompatActivity {
+
+        TextView totalSlots, occupiedSlots, occupibleSlots, totalRevenue;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_admin_dashboard);
+
+            totalSlots = findViewById(R.id.totalSlots);
+            occupiedSlots = findViewById(R.id.occupiedSlots);
+            occupibleSlots = findViewById(R.id.occupibleSlots);
+            totalRevenue = findViewById(R.id.totalRevenue);
+
+            loadDashboard();
+        }
+
+        private void loadDashboard() {
+            ApiService api = ApiClient.getClient().create(ApiService.class);
+
+            api.getAdminDashboard().enqueue(new Callback<AdminDashboard>() {
+                @Override
+                public void onResponse(Call<AdminDashboard> call, Response<AdminDashboard> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+
+                        AdminDashboard data = response.body();
+
+                        totalSlots.setText(String.valueOf(data.getTotalSlots()));
+                        occupiedSlots.setText(String.valueOf(data.getOccupiedSlots()));
+                        occupibleSlots.setText(String.valueOf(data.getOccupibleSlots()));
+                        totalRevenue.setText("₹" + data.getTotalRevenue());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AdminDashboard> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -16,34 +15,54 @@
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
 
-        <!-- ONLY ONE LAUNCHER ACTIVITY -->
+
+         <!-- ONLY ONE LAUNCHER ACTIVITY -->
         <activity
             android:name=".ActiveBookingActivity"
+            android:exported="false"/>
+            <!-- All other activities -->
+        <activity
+            android:name=".PastBookingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConfirmationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BillingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookingSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminDashboardActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- All other activities -->
-        <activity android:name=".PastBookingsActivity" android:exported="false"/>
-        <activity android:name=".ConfirmationActivity" android:exported="false"/>
-        <activity android:name=".PaymentActivity" android:exported="false"/>
-        <activity android:name=".BookingActivity" android:exported="false"/>
-        <activity android:name=".HomeActivity" android:exported="false"/>
-        <activity android:name=".PaymentSuccessActivity" android:exported="false"/>
-        <activity android:name=".BillingActivity" android:exported="false"/>
-        <activity android:name=".MainActivity" android:exported="false"/>
-        <activity android:name=".LoginActivity" android:exported="false"/>
-        <activity android:name=".BookingSuccessActivity" android:exported="false"/>
-        <activity android:name=".SignupActivity" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
     </application>
 
 </manifest>
