@@ -79,37 +79,18 @@ public class ActiveBookingActivity extends AppCompatActivity {
     };
 
     private void endBooking() {
-        // Stop the timer before switching screens
         timerHandler.removeCallbacks(updateTimerThread);
+        long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
 
-        try {
-            // Calculate elapsed time in hours (minimum 1 min for testing)
-            long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
-            double elapsedHours = Math.max(elapsedMillis / (1000.0 * 60 * 60), 0.02); // 0.02 is ~1 min
+        // Get the vehicle type ID (this should come from your database/intent)
+        // For this example, I'll assume you have it in a variable called vehicleTypeId
+        int vehicleTypeId = getIntent().getIntExtra("vehicle_type_id", 1);
 
-            // Convert rawRate safely
-            double hourlyRate = Double.parseDouble(rawRate);
-            double totalAmount = elapsedHours * hourlyRate;
+        Intent intent = new Intent(ActiveBookingActivity.this, BillingActivity.class);
+        intent.putExtra("elapsed_millis", elapsedMillis);
+        intent.putExtra("vehicle_type_id", vehicleTypeId); // CRUCIAL: Pass the ID
 
-            // Move to BillingActivity
-            Intent intent = new Intent(ActiveBookingActivity.this, BillingActivity.class);
-            intent.putExtra("total_amount", totalAmount);
-            intent.putExtra("hours_spent", elapsedHours);
-            intent.putExtra("slot", tvSlot.getText().toString());
-
-            startActivity(intent);
-            finish(); // Close this activity so user can't go back to the timer
-
-        } catch (Exception e) {
-            Log.e("EndBookingError", "Error: " + e.getMessage());
-            Toast.makeText(this, "Calculation Error. Please try again.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Crucial: Stop handler to prevent memory leaks or crashes when app closes
-        timerHandler.removeCallbacks(updateTimerThread);
+        startActivity(intent);
+        finish();
     }
 }
