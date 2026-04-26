@@ -16,7 +16,6 @@ import com.example.smartspot.api.ApiClient;
 import com.example.smartspot.api.ApiService;
 import com.example.smartspot.model.VehicleType;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
     Button bookBtn;
 
     List<VehicleType> vehicleList = new ArrayList<>();
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         priceText = findViewById(R.id.priceText);
         bookBtn = findViewById(R.id.bookBtn);
 
+        userId = getIntent().getIntExtra("user_id", -1);
 
         List<String> defaultList = new ArrayList<>();
         defaultList.add("Loading...");
@@ -61,7 +62,6 @@ public class HomeActivity extends AppCompatActivity {
                 if (vehicleList != null && !vehicleList.isEmpty()) {
                     VehicleType selected = vehicleList.get(position);
                     priceText.setText("Price : Rs" + selected.getPrice() + "/hr");
-
                 } else {
                     priceText.setText("Price: ₹0/hr");
                 }
@@ -74,6 +74,7 @@ public class HomeActivity extends AppCompatActivity {
 
         bookBtn.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, BookingActivity.class);
+            intent.putExtra("user_id", userId);
             startActivity(intent);
         });
     }
@@ -139,6 +140,4 @@ public class HomeActivity extends AppCompatActivity {
 
         vehicleSpinner.setSelection(index);
     }
-
-
 }

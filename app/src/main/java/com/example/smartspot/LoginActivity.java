@@ -67,15 +67,25 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject resObj = new JSONObject(response);
                 boolean success = resObj.getBoolean("success");
 
+                // Inside LoginActivity.java
+                // INSIDE LoginActivity.java
                 runOnUiThread(() -> {
-                    if (success) {
-                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                    try { // START TRY HERE
+                        if (success) {
+                            JSONObject userObj = resObj.getJSONObject("user");
+                            int userId = userObj.getInt("user_id");
 
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            intent.putExtra("user_id", userId);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (org.json.JSONException e) { // CATCH JSON ERRORS HERE
+                        e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, "JSON Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
