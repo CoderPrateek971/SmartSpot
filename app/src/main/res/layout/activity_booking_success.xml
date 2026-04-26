@@ -194,17 +194,20 @@
                 app:strokeWidth="2dp"
                 app:cornerRadius="12dp"/>
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPastBooking"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
                 android:text="View Past Bookings"
                 android:textColor="#000000"
                 android:textStyle="bold"
+                android:textAllCaps="false"
                 android:padding="8dp"/>
+
         </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
     </LinearLayout>
 </ScrollView>
