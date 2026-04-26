@@ -1,9 +1,12 @@
 package com.example.smartspot;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.*;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
@@ -11,13 +14,17 @@ public class BookingSuccessActivity extends AppCompatActivity {
 
     TextView tvSlot, tvVehicleNumber, tvVehicleType, tvPrice, tvStartTime;
     ImageView imgQR;
+    Button btnActiveBooking, btnPastBooking;
+
+    String slot, vehicleNumber, vehicleType, price, startTime;
+    int bookingId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking_success);
 
-        // 1. Initialize Views
+        // ================= INIT VIEWS =================
         tvSlot = findViewById(R.id.tvSlot);
         tvVehicleNumber = findViewById(R.id.tvVehicleNumber);
         tvVehicleType = findViewById(R.id.tvVehicleType);
@@ -25,43 +32,70 @@ public class BookingSuccessActivity extends AppCompatActivity {
         tvStartTime = findViewById(R.id.tvStartTime);
         imgQR = findViewById(R.id.imgQR);
 
-        // 2. Get Data with fallback defaults to prevent NullPointerExceptions
-        String slot = getIntent().getStringExtra("slot");
+        btnActiveBooking = findViewById(R.id.btnActiveBooking);
+        btnPastBooking = findViewById(R.id.btnPastBooking);
+
+        // ================= GET DATA =================
+        slot = getIntent().getStringExtra("slot");
         if (slot == null) slot = "TBD";
 
-        String vehicleNumber = getIntent().getStringExtra("vehicle_number");
+        vehicleNumber = getIntent().getStringExtra("vehicle_number");
         if (vehicleNumber == null) vehicleNumber = "Unknown";
 
-        String vehicleType = getIntent().getStringExtra("vehicle_type");
+        vehicleType = getIntent().getStringExtra("vehicle_type");
         if (vehicleType == null) vehicleType = "N/A";
 
-        String price = getIntent().getStringExtra("price");
+        price = getIntent().getStringExtra("price");
         if (price == null) price = "0";
 
-        String startTime = getIntent().getStringExtra("start_time");
+        startTime = getIntent().getStringExtra("start_time");
         if (startTime == null) startTime = "--:--";
 
-        int bookingId = getIntent().getIntExtra("booking_id", -1);
+        bookingId = getIntent().getIntExtra("booking_id", -1);
 
-        // 3. Set Text safely
-        if (tvSlot != null) tvSlot.setText(slot);
-        if (tvVehicleNumber != null) tvVehicleNumber.setText(vehicleNumber);
-        if (tvVehicleType != null) tvVehicleType.setText(vehicleType);
-        if (tvPrice != null) tvPrice.setText("₹" + price + "/hour");
-        if (tvStartTime != null) tvStartTime.setText(startTime);
+        // ================= SET DATA =================
+        tvSlot.setText(slot);
+        tvVehicleNumber.setText(vehicleNumber);
+        tvVehicleType.setText(vehicleType);
+        tvPrice.setText("₹" + price + "/hour");
+        tvStartTime.setText(startTime);
 
-        // 4. Generate QR only if we have a valid ID or a placeholder
+        // ================= QR =================
         generateQR(bookingId != -1 ? String.valueOf(bookingId) : "TEST_QR");
+
+        // ================= BUTTON ACTIONS =================
+
+        // 🔥 GO TO ACTIVE BOOKING (IMPORTANT)
+        btnActiveBooking.setOnClickListener(v -> {
+
+            Intent intent = new Intent(BookingSuccessActivity.this, ActiveBookingActivity.class);
+
+            intent.putExtra("slot", slot);
+            intent.putExtra("vehicle_number", vehicleNumber);
+            intent.putExtra("price", price);
+
+            // 🔥 TIMER START HERE
+            intent.putExtra("start_time_millis", System.currentTimeMillis());
+
+            startActivity(intent);
+        });
+
+        // (optional) past booking
+        btnPastBooking.setOnClickListener(v -> {
+            Toast.makeText(this, "Past Bookings Page", Toast.LENGTH_SHORT).show();
+        });
     }
 
+    // ================= QR FUNCTION =================
     private void generateQR(String text) {
-        // Double check text isn't null
-        if (text == null || text.isEmpty() || imgQR == null) return;
+
+        if (text == null || text.isEmpty()) return;
 
         try {
             BarcodeEncoder encoder = new BarcodeEncoder();
             Bitmap bitmap = encoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 400, 400);
             imgQR.setImageBitmap(bitmap);
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "QR Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
