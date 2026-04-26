@@ -4,6 +4,7 @@ import com.example.smartspot.model.AdminDashboard;
 import com.example.smartspot.model.Booking;
 import com.example.smartspot.model.BookingResponse;
 import com.example.smartspot.model.PastBooking;
+import com.example.smartspot.model.Pricing;
 import com.example.smartspot.model.Slot;
 import com.example.smartspot.model.SupportTicket;
 import com.example.smartspot.model.User;
@@ -17,6 +18,8 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
+
 
 public interface ApiService {
 
@@ -62,4 +65,10 @@ public interface ApiService {
 
     @GET("support/user/{userId}")
     Call<List<SupportTicket>> getUserComplaints(@Path("userId") int userId);
+    @GET("pricing")
+    Call<Pricing> getPricing();
+
+    @POST("pricing/update")
+    Call<Void> updatePricing(@Body Pricing request);
+
 }
