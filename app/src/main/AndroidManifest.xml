@@ -14,61 +14,54 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
-
-        <!-- BILLING ACTIVITY (Starting Page) -->
         <activity
-            android:name=".ActiveBookingActivity"
-            android:exported="true">
+            android:name=".ProfileActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- All other activities MUST have exported="false" if they don't use intent-filters -->
+        <!-- BILLING ACTIVITY (Starting Page) -->
+        <activity
+            android:name=".ActiveBookingActivity"
+            android:exported="false"/>
+             <!-- All other activities MUST have exported="false" if they don't use intent-filters -->
         <activity
             android:name=".ConfirmationActivity"
             android:exported="false" />
-
         <activity
             android:name=".PastBookingsActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".PaymentActivity"
-            android:exported="false"/>
-
-        <!-- FIXED: Added android:exported="false" here -->
+            android:exported="false" /> <!-- FIXED: Added android:exported="false" here -->
         <activity
             android:name=".BookingActivity"
-            android:exported="false" />
-
-        <!-- FIXED: Added android:exported="false" here -->
+            android:exported="false" /> <!-- FIXED: Added android:exported="false" here -->
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
-
-        <activity android:name=".PaymentSuccessActivity"
-            android:exported="false"/>
-
-        <activity android:name=".BillingActivity"
-            android:exported="false"/>
-
+        <activity
+            android:name=".PaymentSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BillingActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".LoginActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".BookingSuccessActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".SignupActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
     </application>
+
 </manifest>
