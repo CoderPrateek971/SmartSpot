@@ -45,7 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 URL url = new URL("http://10.0.2.2:3000/login");
-
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
@@ -67,19 +66,30 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject resObj = new JSONObject(response);
                 boolean success = resObj.getBoolean("success");
 
+                // ✅ DO THIS ON THE BACKGROUND THREAD (Inside the existing try-catch)
+                if (success) {
+                    // Extract the ID
+                    int loggedInId = resObj.getJSONObject("user").getInt("user_id");
+
+                    // Save to SharedPreferences
+                    android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    pref.edit().putInt("userId", loggedInId).apply();
+                }
+
+                // ONLY DO UI TASKS HERE
                 runOnUiThread(() -> {
                     if (success) {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
                     }
                 });
 
             } catch (Exception e) {
+                Log.e("LOGIN_ERROR", e.toString());
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
