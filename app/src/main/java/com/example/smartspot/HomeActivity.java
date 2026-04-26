@@ -67,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
 
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -77,6 +78,7 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra("user_id", userId);
             startActivity(intent);
         });
+
     }
 
     private void loadVehicleTypes() {

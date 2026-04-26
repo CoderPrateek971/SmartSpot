@@ -5,9 +5,10 @@ import com.example.smartspot.model.Booking;
 import com.example.smartspot.model.BookingResponse;
 import com.example.smartspot.model.PastBooking;
 import com.example.smartspot.model.Slot;
+import com.example.smartspot.model.SupportTicket;
 import com.example.smartspot.model.User;
 import com.example.smartspot.model.VehicleType;
-
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,5 +57,9 @@ public interface ApiService {
 
     @GET("booking/{id}")
     Call<Booking> getBookingById(@Path("id") int id);
+    @POST("support/create")
+    Call<Map<String, Object>> createComplaint(@Body Map<String, Object> body);
 
+    @GET("support/user/{userId}")
+    Call<List<SupportTicket>> getUserComplaints(@Path("userId") int userId);
 }

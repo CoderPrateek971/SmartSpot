@@ -118,7 +118,7 @@
         android:layout_height="55dp"
         android:layout_marginBottom="88dp"
         android:background="@drawable/bg_button_green"
-        android:text="CONTINUE"
+        android:text="Pay"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"

@@ -154,11 +154,13 @@
             android:layout_marginTop="10dp"/>
 
         <TextView
+            android:id="@+id/signupText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign up"
             android:textColor="#4CAF8E"
             android:textStyle="bold"
+            android:padding="8dp"
             android:layout_marginTop="4dp"/>
 
     </LinearLayout>

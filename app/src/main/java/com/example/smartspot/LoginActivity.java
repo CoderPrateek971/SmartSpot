@@ -1,9 +1,11 @@
 package com.example.smartspot;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView; // <-- Added this import
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +16,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-import android.content.Intent;
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText username, password;
     Button loginBtn;
+    TextView signupText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,14 @@ public class LoginActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         loginBtn = findViewById(R.id.loginBtn);
+        signupText = findViewById(R.id.signupText);
 
         loginBtn.setOnClickListener(v -> loginUser());
+
+        signupText.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void loginUser() {

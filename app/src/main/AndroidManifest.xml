@@ -15,7 +15,9 @@
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
 
-
+        <activity
+            android:name=".SupportActivity"
+            android:exported="false"/>
         <!-- ONLY ONE LAUNCHER ACTIVITY -->
         <activity
             android:name=".ActiveBookingActivity"
