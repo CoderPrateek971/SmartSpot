@@ -11,7 +11,7 @@ public class ApiClient {
     private static final String REAL_DEVICE_URL = "http://10.98.104.72:3000/";
 
     // 👉 CHANGE THIS WHEN NEEDED
-    private static final String BASE_URL = REAL_DEVICE_URL;
+//    private static final String BASE_URL = REAL_DEVICE_URL;
 
 
     private static Retrofit retrofit;

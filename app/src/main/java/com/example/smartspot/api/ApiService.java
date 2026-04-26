@@ -1,5 +1,6 @@
 package com.example.smartspot.api;
 
+import com.example.smartspot.model.Booking;
 import com.example.smartspot.model.BookingResponse;
 import com.example.smartspot.model.User;
 import com.example.smartspot.model.PastBooking;
@@ -29,7 +30,10 @@ public interface ApiService {
 //    @POST("book_slot.php")
 //    Call<String> bookSlot(@Body HashMap<String, Object> bookingData);
 
-    @POST("bookings")  // ✅ CORRECT
+    @POST("bookings")
     Call<BookingResponse> bookSlot(@Body HashMap<String, Object> bookingData);
+
+    @GET("booking/{id}")
+    Call<Booking> getBookingById(@Path("id") int id);
 
 }
