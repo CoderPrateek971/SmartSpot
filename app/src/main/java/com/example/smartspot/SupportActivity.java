@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartspot.api.ApiClient;
+import com.example.smartspot.api.ApiService;
 import com.example.smartspot.model.SupportTicket;
 
 import java.util.HashMap;
