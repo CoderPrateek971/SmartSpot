@@ -1,9 +1,7 @@
 package com.example.smartspot;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -13,9 +11,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smartspot.api.ApiClient;
-import com.example.smartspot.api.ApiService;
 // FIXED: Importing User from the same package as it is not in a 'model' folder in your tree
 //import com.example.smartspot.User;
+import com.example.smartspot.api.ApiService;
 import com.example.smartspot.model.User;
 //import com.google.firebase.firestore.auth.User;
 
