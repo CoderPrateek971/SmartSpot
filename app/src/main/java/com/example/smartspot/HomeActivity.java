@@ -9,19 +9,15 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.smartspot.api.ApiClient;
 import com.example.smartspot.api.ApiService;
 import com.example.smartspot.model.Slot;
 import com.example.smartspot.model.VehicleType;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,8 +27,6 @@ public class HomeActivity extends AppCompatActivity {
     Spinner vehicleSpinner, slotSpinner;
     TextView priceText;
     Button bookBtn;
-
-    // Use View so it can handle both Buttons and MaterialCardViews without crashing
     Map<String, View> mapButtons = new HashMap<>();
     List<VehicleType> vehicleList = new ArrayList<>();
     List<Slot> slotList = new ArrayList<>();
@@ -50,7 +44,6 @@ public class HomeActivity extends AppCompatActivity {
         priceText = findViewById(R.id.priceText);
         bookBtn = findViewById(R.id.bookBtn);
 
-        // Initialize Map pins
         mapButtons.put("A1", findViewById(R.id.btn_A1));
         mapButtons.put("A2", findViewById(R.id.btn_A2));
         mapButtons.put("A3", findViewById(R.id.btn_A3));
@@ -77,10 +70,9 @@ public class HomeActivity extends AppCompatActivity {
 
         bookBtn.setOnClickListener(v -> {
             if (slotList.isEmpty() || vehicleList.isEmpty()) {
-                Toast.makeText(this, "Loading data, please wait...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No active slots available", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             int vehiclePos = vehicleSpinner.getSelectedItemPosition();
             int slotPos = slotSpinner.getSelectedItemPosition();
 
@@ -99,34 +91,46 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    slotList = response.body();
+                    slotList.clear();
+                    List<String> names = new ArrayList<>();
 
-                    // 1. Hide all pins first using View type to avoid ClassCastException
+                    // Reset Map Pins (hide them all first)
                     for (View pin : mapButtons.values()) {
                         if (pin != null) pin.setVisibility(View.GONE);
                     }
 
-                    // 2. Show only slots returned by API
-                    List<String> names = new ArrayList<>();
-                    for (Slot s : slotList) {
+                    // Loop through the slots sent by the backend
+                    for (Slot s : response.body()) {
+
+                        // REMOVED the "s.getIsActive() == 1" check!
+                        // The backend already did the filtering for us.
+
+                        slotList.add(s);
                         String sNum = s.getSlot_number();
                         names.add(sNum);
 
+                        // Show pin on map if it exists
                         if (mapButtons.containsKey(sNum)) {
                             View targetPin = mapButtons.get(sNum);
                             if (targetPin != null) targetPin.setVisibility(View.VISIBLE);
                         }
                     }
 
+                    // Attach the names to the dropdown spinner
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(HomeActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, names);
                     slotSpinner.setAdapter(adapter);
+
+                    // If the list is STILL empty, it means DB actually has no available slots
+                    if (slotList.isEmpty()) {
+                        Toast.makeText(HomeActivity.this, "No parking slots are currently enabled.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Slot>> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, "Slot Load Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -148,5 +152,12 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<VehicleType>> call, Throwable t) {}
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadSlots();
+        loadVehicleTypes();
     }
 }

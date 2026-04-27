@@ -1,17 +1,15 @@
 package com.example.smartspot;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView; // <-- Added this import
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONObject;
-
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,7 +19,10 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText username, password;
     Button loginBtn;
-    TextView signupText;
+    TextView signupText, toggleUser, toggleAdmin;
+
+    // Track if user or admin is selected
+    private boolean isAdminSelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +33,30 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         loginBtn = findViewById(R.id.loginBtn);
         signupText = findViewById(R.id.signupText);
+        toggleUser = findViewById(R.id.toggleUser);
+        toggleAdmin = findViewById(R.id.toggleAdmin);
+
+        // UI Logic for Toggle Selection
+        toggleUser.setOnClickListener(v -> {
+            isAdminSelected = false;
+            toggleUser.setBackgroundResource(R.drawable.selected_toggle);
+            toggleUser.setTextColor(Color.WHITE);
+            toggleAdmin.setBackgroundResource(0); // Remove background
+            toggleAdmin.setTextColor(Color.parseColor("#888888"));
+        });
+
+        toggleAdmin.setOnClickListener(v -> {
+            isAdminSelected = true;
+            toggleAdmin.setBackgroundResource(R.drawable.selected_toggle);
+            toggleAdmin.setTextColor(Color.WHITE);
+            toggleUser.setBackgroundResource(0); // Remove background
+            toggleUser.setTextColor(Color.parseColor("#888888"));
+        });
 
         loginBtn.setOnClickListener(v -> loginUser());
 
         signupText.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
         });
     }
 
@@ -46,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         String pass = password.getText().toString().trim();
 
         if (user.isEmpty() || pass.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Enter all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Enter all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -61,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject json = new JSONObject();
                 json.put("username", user);
                 json.put("password", pass);
+                // SEND THE TOGGLE STATE TO SERVER
+                json.put("isAdminMode", isAdminSelected);
 
                 OutputStream os = conn.getOutputStream();
                 os.write(json.toString().getBytes());
@@ -74,33 +95,44 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject resObj = new JSONObject(response);
                 boolean success = resObj.getBoolean("success");
 
-                // ✅ DO THIS ON THE BACKGROUND THREAD (Inside the existing try-catch)
-                if (success) {
-                    // Extract the ID
-                    int loggedInId = resObj.getJSONObject("user").getInt("user_id");
+                // 1. Declare a variable to hold the ID so we can pass it to the Intent later
+                int tempId = -1;
 
-                    // Save to SharedPreferences
+                if (success) {
+                    tempId = resObj.getJSONObject("user").getInt("user_id");
                     android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                    pref.edit().putInt("userId", loggedInId).apply();
+                    pref.edit().putInt("userId", tempId).apply();
                 }
 
-                // ONLY DO UI TASKS HERE
+                // Make it final so it can be used inside runOnUiThread
+                final int finalLoggedInId = tempId;
+
                 runOnUiThread(() -> {
                     if (success) {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+
+                        Intent intent;
+                        if (isAdminSelected) {
+                            // GO TO ADMIN DASHBOARD
+                            intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+                        } else {
+                            // GO TO USER HOME
+                            intent = new Intent(LoginActivity.this, HomeActivity.class);
+
+                            // 2. THIS IS THE FIX! We pass the ID to HomeActivity
+                            intent.putExtra("user_id", finalLoggedInId);
+                        }
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                        String message = resObj.optString("message", "Invalid Credentials");
+                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
                 });
 
             } catch (Exception e) {
                 Log.e("LOGIN_ERROR", e.toString());
-                runOnUiThread(() -> {
-                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+                runOnUiThread(() -> Toast.makeText(this, "Connection Error", Toast.LENGTH_LONG).show());
             }
         }).start();
     }

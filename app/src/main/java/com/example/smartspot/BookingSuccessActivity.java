@@ -68,6 +68,10 @@ public class BookingSuccessActivity extends AppCompatActivity {
             intent.putExtra("vehicle_number", vehicleNumber);
             intent.putExtra("price", price);
             intent.putExtra("start_time_millis", System.currentTimeMillis());
+
+            // 🚨 THIS IS THE FIX! We pass the bookingId forward! 🚨
+            intent.putExtra("booking_id", bookingId);
+
             startActivity(intent);
         });
 

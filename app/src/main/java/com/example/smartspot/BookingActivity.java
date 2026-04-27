@@ -190,7 +190,19 @@ public class BookingActivity extends AppCompatActivity {
                     BookingResponse booking = response.body();
                     navigateToSuccess(booking);
                 } else {
-                    Toast.makeText(BookingActivity.this, "Booking failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                    // THIS WILL SHOW YOU THE EXACT DATABASE ERROR!
+                    try {
+                        String errorMsg = "Unknown Error";
+                        if (response.errorBody() != null) {
+                            errorMsg = response.errorBody().string();
+                        }
+                        Log.e("API_ERROR", "Backend Error: " + errorMsg);
+
+                        // Show the error in a Toast so you can read it
+                        Toast.makeText(BookingActivity.this, "DB Error: " + errorMsg, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

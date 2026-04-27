@@ -14,35 +14,66 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
-
-
-
+        <activity
+            android:name=".ManageSlotsActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity" android:exported="false" />
-        <activity android:name=".HomeActivity" android:exported="false" />
-        <activity android:name=".SignupActivity" android:exported="false" />
-        <activity android:name=".ProfileActivity" android:exported="false" />
-        <activity android:name=".EditProfileActivity" android:exported="false" />
-        <activity android:name=".BookingActivity" android:exported="false" />
-        <activity android:name=".ActiveBookingActivity" android:exported="false" />
-        <activity android:name=".PastBookingsActivity" android:exported="false" />
-        <activity android:name=".ConfirmationActivity" android:exported="false" />
-        <activity android:name=".BookingSuccessActivity" android:exported="false" />
-        <activity android:name=".PaymentActivity" android:exported="false" />
-        <activity android:name=".PaymentSuccessActivity" android:exported="false" />
-        <activity android:name=".BillingActivity" android:exported="false" />
-        <activity android:name=".PricingActivity" android:exported="false" />
-        <activity android:name=".AdminDashboardActivity" android:exported="false" />
-        <activity android:name=".ManageSlotsActivity" android:exported="false" />
-        <activity android:name=".SupportActivity" android:exported="false" />
-
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ActiveBookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PastBookingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConfirmationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookingSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BillingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PricingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SupportActivity"
+            android:exported="false" />
     </application>
+
 </manifest>

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView; // Added
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,29 +20,43 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText username, email, password, confirmPassword, phone;
     Button saveBtn;
+    ImageView btnBack; // Added
 
     int userId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // ✅ Get user_id from SharedPreferences instead of Intent
+        // 1. Initialize all views
+        btnBack = findViewById(R.id.btnBack);
+        username = findViewById(R.id.username);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        confirmPassword = findViewById(R.id.confirmPassword);
+        phone = findViewById(R.id.phone);
+        saveBtn = findViewById(R.id.saveBtn);
+
+        // 2. Handle Back Button Click
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
+
+        // Get user_id from SharedPreferences
         android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = pref.getInt("userId", -1);
 
         if (userId == -1) {
             Toast.makeText(this, "Session expired, please login again", Toast.LENGTH_LONG).show();
-            Log.e("EDIT_PROFILE", "userId is -1");
+            finish();
         }
 
-        // ... (rest of your findViewById code remains the same)
+        // Handle Save Button Click
+        saveBtn.setOnClickListener(v -> updateProfile());
     }
 
     private void updateProfile() {
-
         String name = username.getText().toString().trim();
         String mail = email.getText().toString().trim();
         String pass = password.getText().toString().trim();
@@ -82,7 +97,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     json.put("password", pass);
                 }
 
-                // 🔥 DEBUG
                 Log.d("API_SEND", json.toString());
 
                 OutputStream os = conn.getOutputStream();
@@ -90,7 +104,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 os.close();
 
                 int responseCode = conn.getResponseCode();
-                Log.d("API_RESPONSE_CODE", "Code: " + responseCode);
 
                 if (responseCode == 200) {
                     runOnUiThread(() -> {
@@ -98,11 +111,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         finish();
                     });
                 } else {
-                    // Read the error message from the server
-                    java.util.Scanner s = new java.util.Scanner(conn.getErrorStream()).useDelimiter("\\A");
-                    String responseString = s.hasNext() ? s.next() : "";
-                    Log.e("API_ERROR_BODY", responseString);
-
                     runOnUiThread(() -> {
                         Toast.makeText(EditProfileActivity.this, "Update Failed: " + responseCode, Toast.LENGTH_SHORT).show();
                     });

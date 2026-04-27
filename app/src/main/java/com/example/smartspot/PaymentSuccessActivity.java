@@ -3,76 +3,40 @@ package com.example.smartspot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import org.json.JSONObject;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
 
 public class PaymentSuccessActivity extends AppCompatActivity {
-
-    TextView invoiceId, amountPaid, paymentMethod, viewPastBookings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_success);
+        setContentView(R.layout.activity_payment_success); // Your invoice XML!
 
-        NavbarHelper.setupNavbar(this);
+        TextView invoiceId = findViewById(R.id.invoiceId);
+        TextView amountPaid = findViewById(R.id.amountPaid);
+        TextView viewPastBookings = findViewById(R.id.viewPastBookings);
 
-        invoiceId = findViewById(R.id.invoiceId);
-        amountPaid = findViewById(R.id.amountPaid);
-        paymentMethod = findViewById(R.id.paymentMethod);
-        viewPastBookings = findViewById(R.id.viewPastBookings);
+        // Get data passed from PaymentActivity
+        int bookingId = getIntent().getIntExtra("booking_id", 0);
+        String amount = getIntent().getStringExtra("amount");
 
-        paymentMethod.setText("Payment Method: UPI/Card");
+        // Set the UI
+        if (invoiceId != null) invoiceId.setText("Invoice ID: #PKNG-" + String.format("%04d", bookingId));
+        if (amountPaid != null) amountPaid.setText("Amount Paid: ₹" + amount);
 
-        viewPastBookings.setOnClickListener(v -> {
-            Intent intent = new Intent(PaymentSuccessActivity.this, PastBookingsActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        // Go home button
+        if (viewPastBookings != null) {
+            viewPastBookings.setOnClickListener(v -> {
+                Intent intent = new Intent(PaymentSuccessActivity.this, HomeActivity.class);
 
-        int receivedBookingId = getIntent().getIntExtra("booking_id", 1);
-        fetchTransaction(receivedBookingId);
-    }
+                // Pass user ID so HomeActivity doesn't crash
+                int userId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getInt("userId", -1);
+                intent.putExtra("user_id", userId);
 
-    private void fetchTransaction(int id) {
-        new Thread(() -> {
-            try {
-                URL url = new URL("http://10.0.2.2:3000/transaction/" + id);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-
-                InputStream is = conn.getInputStream();
-                Scanner sc = new Scanner(is).useDelimiter("\\A");
-                String response = sc.hasNext() ? sc.next() : "";
-                sc.close();
-
-                JSONObject obj = new JSONObject(response);
-                boolean success = obj.optBoolean("success", false);
-
-                if (success) {
-                    JSONObject data = obj.getJSONObject("data");
-                    int transactionId = data.getInt("transaction_id");
-                    String amount = data.getString("amount_paid");
-
-                    runOnUiThread(() -> {
-                        invoiceId.setText("Invoice ID: #" + transactionId);
-                        amountPaid.setText("Amount Paid: ₹" + amount);
-                    });
-                } else {
-                    runOnUiThread(() ->
-                            Toast.makeText(PaymentSuccessActivity.this, "Transaction retrieved successfully", Toast.LENGTH_SHORT).show()
-                    );
-                }
-            } catch (Exception e) {
-                runOnUiThread(() ->
-                        Toast.makeText(PaymentSuccessActivity.this, "Error fetching transaction details", Toast.LENGTH_LONG).show()
-                );
-            }
-        }).start();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
+        }
     }
 }

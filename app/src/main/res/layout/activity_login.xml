@@ -13,25 +13,11 @@
         android:gravity="center_horizontal">
 
         <!-- Logo -->
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:text="P"
-            android:textSize="32sp"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:background="@drawable/circle_bg"
-            android:layout_marginTop="20dp"/>
-
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="parking SUITE"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"/>
-
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo" />
         <!-- Toggle -->
         <LinearLayout
             android:layout_width="wrap_content"
@@ -41,21 +27,26 @@
             android:layout_marginTop="20dp">
 
             <TextView
+                android:id="@+id/toggleUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User"
                 android:padding="10dp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/selected_toggle"/>
+                android:background="@drawable/selected_toggle"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <TextView
+                android:id="@+id/toggleAdmin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Admin"
                 android:padding="10dp"
-                android:textColor="#888888"/>
+                android:textColor="#888888"
+                android:clickable="true"
+                android:focusable="true"/>
         </LinearLayout>
-
         <!-- Username -->
         <EditText
             android:id="@+id/username"
