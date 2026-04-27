@@ -21,7 +21,7 @@ public class NavbarHelper {
         LinearLayout navPast = activity.findViewById(R.id.navPastBookings);
         LinearLayout navProfile = activity.findViewById(R.id.navProfile);
 
-        int userId = 1; // Replace with actual logged-in User ID
+        int userId = 1;
 
         if (navHome != null) {
             navHome.setOnClickListener(v -> {
@@ -32,9 +32,7 @@ public class NavbarHelper {
         }
 
         if (navActive != null) {
-            navActive.setOnClickListener(v -> {
-                checkActiveBooking(activity, userId);
-            });
+            navActive.setOnClickListener(v -> checkActiveBooking(activity, userId));
         }
 
         if (navPast != null) {
@@ -47,7 +45,11 @@ public class NavbarHelper {
 
         if (navProfile != null) {
             navProfile.setOnClickListener(v -> {
-                // activity.startActivity(new Intent(activity, ProfileActivity.class));
+                if (!(activity instanceof ProfileActivity)) {
+                    Intent intent = new Intent(activity, ProfileActivity.class);
+                    intent.putExtra("user_id", userId);
+                    activity.startActivity(intent);
+                }
             });
         }
     }
@@ -60,7 +62,6 @@ public class NavbarHelper {
                 if (response.isSuccessful() && response.body() != null) {
                     BookingResponse booking = response.body();
 
-                    // Check if server returned a valid booking or the "No active booking" message
                     if (booking.getBooking_id() != 0) {
                         Intent intent = new Intent(activity, ActiveBookingActivity.class);
                         intent.putExtra("slot", booking.getSlot());

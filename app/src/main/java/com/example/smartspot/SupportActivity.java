@@ -3,15 +3,12 @@ package com.example.smartspot;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView; // Added
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +30,7 @@ public class SupportActivity extends AppCompatActivity {
     EditText description;
     Button submitBtn;
     RecyclerView recycler;
+    ImageView btnBack; // Added
 
     int userId;
 
@@ -41,12 +39,21 @@ public class SupportActivity extends AppCompatActivity {
         super.onCreate(b);
         setContentView(R.layout.activity_support);
 
+        // Navbar logic (if applicable)
+        NavbarHelper.setupNavbar(this);
+
         categoryGroup = findViewById(R.id.categoryGroup);
         description = findViewById(R.id.description);
         submitBtn = findViewById(R.id.submitBtn);
         recycler = findViewById(R.id.recycler);
+        btnBack = findViewById(R.id.btnBack); // Make sure this ID matches your XML
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
+
+        // Setup Back Button click
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
 
         userId = getSharedPreferences("USER", MODE_PRIVATE)
                 .getInt("user_id", -1);
@@ -57,7 +64,6 @@ public class SupportActivity extends AppCompatActivity {
     }
 
     private void submitComplaint() {
-
         int selectedId = categoryGroup.getCheckedRadioButtonId();
 
         if (selectedId == -1) {
@@ -74,8 +80,6 @@ public class SupportActivity extends AppCompatActivity {
             return;
         }
 
-        // 🔥 FALLBACK: If SharedPreferences is empty, force user_id to 1 so the database accepts it.
-        // (You can remove this once you implement proper SharedPreferences in LoginActivity)
         if (userId == -1) {
             userId = 1;
         }
@@ -90,27 +94,23 @@ public class SupportActivity extends AppCompatActivity {
         api.createComplaint(body).enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> res) {
-                // 🔥 PROPER CHECK: Only show success if the server returns 200 OK
                 if (res.isSuccessful() && res.body() != null) {
                     Toast.makeText(SupportActivity.this, "Complaint Submitted Successfully", Toast.LENGTH_SHORT).show();
-                    description.setText(""); // Clear the text box
-                    loadTickets(); // Refresh the list
+                    description.setText("");
+                    loadTickets();
                 } else {
-                    // Tell us exactly what the server error is!
-                    Toast.makeText(SupportActivity.this, "Server rejected it. Error code: " + res.code(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(SupportActivity.this, "Server error code: " + res.code(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                Toast.makeText(SupportActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                t.printStackTrace();
+                Toast.makeText(SupportActivity.this, "Network Error", Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void loadTickets() {
-        // 🔥 Make sure userId is valid before fetching
         int fetchId = (userId == -1) ? 1 : userId;
 
         ApiService api = ApiClient.getClient().create(ApiService.class);
@@ -118,11 +118,8 @@ public class SupportActivity extends AppCompatActivity {
         api.getUserComplaints(fetchId).enqueue(new Callback<List<SupportTicket>>() {
             @Override
             public void onResponse(Call<List<SupportTicket>> call, Response<List<SupportTicket>> res) {
-                // 🔥 PROTECT AGAINST CRASHES: Ensure body is not null before passing to adapter
                 if (res.isSuccessful() && res.body() != null) {
                     recycler.setAdapter(new TicketAdapter(res.body()));
-                } else {
-                    Toast.makeText(SupportActivity.this, "Failed to load tickets", Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -15,9 +15,7 @@
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBlz0agoFjKokYOF2zovdi5LwdKz2FBVFg"/>
+
 
         <activity
             android:name=".LoginActivity"
