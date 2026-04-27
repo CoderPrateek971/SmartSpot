@@ -6,20 +6,24 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONObject;
 
 public class SignupActivity extends AppCompatActivity {
 
-    // 1. Correct types: Use TextInputEditText and AutoCompleteTextView
     EditText etName, etEmail, etPassword, etConfirmPassword, etPhone;
     AutoCompleteTextView spVehicle;
     Button btnSignup;
+    ImageView btnBack; // Declared Back Button
 
     String[] types = {"Bike", "Car"};
 
@@ -28,7 +32,6 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        // 2. Initialize views inside onCreate
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -36,13 +39,32 @@ public class SignupActivity extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         spVehicle = findViewById(R.id.spVehicle);
         btnSignup = findViewById(R.id.btnSignup);
+        btnBack = findViewById(R.id.btnBack); // Initialize Back Button
 
-        // 3. Setup the AutoCompleteTextView (Dropdown)
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, types);
         spVehicle.setAdapter(adapter);
 
         btnSignup.setOnClickListener(v -> registerUser());
+
+        // Handle on-screen Back button click
+        btnBack.setOnClickListener(v -> navigateToLogin());
+
+        // Handle physical device back button / gesture swipe
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToLogin();
+            }
+        });
+    }
+
+    // Helper method to go back to login screen smoothly
+    private void navigateToLogin() {
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
     }
 
     private void registerUser() {
@@ -52,7 +74,6 @@ public class SignupActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
 
-        // 4. Use getText() for AutoCompleteTextView instead of getSelectedItem()
         String vehicle = spVehicle.getText().toString();
 
         if(name.isEmpty() || email.isEmpty() || password.isEmpty() || vehicle.isEmpty()) {
@@ -70,6 +91,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void sendDataToServer(String name, String email, String password, String phone, String vehicle) {
 
+        // Change this URL to match your actual server IP if you are testing on a real device
         String url = "http://10.7.34.70:3000/signup";
 
         JSONObject json = new JSONObject();
@@ -87,13 +109,10 @@ public class SignupActivity extends AppCompatActivity {
                 json,
                 response -> {
                     Toast.makeText(SignupActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    navigateToLogin(); // Use the helper method here too!
                 },
                 error -> {
-                    Toast.makeText(SignupActivity.this, "User Already Exist", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "User Already Exist or Network Error", Toast.LENGTH_SHORT).show();
                 }
         );
 

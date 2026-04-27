@@ -1,7 +1,9 @@
 package com.example.smartspot;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -21,18 +23,30 @@ public class NavbarHelper {
         LinearLayout navPast = activity.findViewById(R.id.navPastBookings);
         LinearLayout navProfile = activity.findViewById(R.id.navProfile);
 
-        int userId = 1;
+        // 1. Fetch the REAL user ID from SharedPreferences (Instead of hardcoding 1)
+        SharedPreferences pref = activity.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int userId = pref.getInt("userId", -1);
 
         if (navHome != null) {
             navHome.setOnClickListener(v -> {
                 if (!(activity instanceof HomeActivity)) {
-                    activity.startActivity(new Intent(activity, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    Intent intent = new Intent(activity, HomeActivity.class);
+                    intent.putExtra("user_id", userId); // Pass it back to Home
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    activity.startActivity(intent);
                 }
             });
         }
 
         if (navActive != null) {
-            navActive.setOnClickListener(v -> checkActiveBooking(activity, userId));
+            navActive.setOnClickListener(v -> {
+                if (userId == -1) {
+                    Toast.makeText(activity, "Error: User not logged in", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(activity, "Checking...", Toast.LENGTH_SHORT).show();
+                checkActiveBooking(activity, userId);
+            });
         }
 
         if (navPast != null) {
@@ -62,12 +76,19 @@ public class NavbarHelper {
                 if (response.isSuccessful() && response.body() != null) {
                     BookingResponse booking = response.body();
 
+                    // If booking_id > 0, an active booking exists in the database
                     if (booking.getBooking_id() != 0) {
                         Intent intent = new Intent(activity, ActiveBookingActivity.class);
                         intent.putExtra("slot", booking.getSlot());
                         intent.putExtra("vehicle_number", booking.getVehicle_number());
                         intent.putExtra("price", String.valueOf(booking.getPrice()));
+
+                        // 🚨 CRITICAL: Pass the booking ID so Billing & Payment can work!
                         intent.putExtra("booking_id", booking.getBooking_id());
+
+                        // Start the timer
+                        intent.putExtra("start_time_millis", System.currentTimeMillis());
+
                         activity.startActivity(intent);
                     } else {
                         Toast.makeText(activity, "No active booking found", Toast.LENGTH_SHORT).show();
