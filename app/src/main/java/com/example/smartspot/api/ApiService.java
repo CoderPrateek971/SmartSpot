@@ -71,4 +71,6 @@ public interface ApiService {
     @POST("pricing/update")
     Call<Void> updatePricing(@Body Pricing request);
 
+    @GET("slots/available")
+    Call<List<Slot>> getAvailableSlots();
 }

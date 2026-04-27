@@ -24,4 +24,15 @@ public class Slot {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    int slot_id;
+
+
+    public int getSlot_id() {
+        return slot_id;
+    }
+
+    public String getSlot_number() {
+        return slot_number;
+    }
 }
