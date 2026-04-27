@@ -62,4 +62,7 @@ public interface ApiService {
 
     @GET("support/user/{userId}")
     Call<List<SupportTicket>> getUserComplaints(@Path("userId") int userId);
+
+    @GET("slots/available")
+    Call<List<Slot>> getAvailableSlots();
 }

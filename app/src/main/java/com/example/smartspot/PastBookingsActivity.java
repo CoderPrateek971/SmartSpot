@@ -1,9 +1,12 @@
 package com.example.smartspot;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,20 +24,33 @@ import retrofit2.Response;
 public class PastBookingsActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
+    ImageView btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_bookings);
 
+        NavbarHelper.setupNavbar(this);
+
         recyclerView = findViewById(R.id.recyclerView);
+        btnBack = findViewById(R.id.btnBack);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        btnBack.setOnClickListener(v -> navigateToHome());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToHome();
+            }
+        });
+
         int userId = 1;
-        Log.d("API_DEBUG", "Attempting to fetch bookings for User ID: " + userId);
 
         if (userId == -1) {
-            Toast.makeText(this, "Error: User not logged in (ID is -1)", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error: User not logged in", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -45,25 +61,27 @@ public class PastBookingsActivity extends AppCompatActivity {
             public void onResponse(Call<List<PastBooking>> call, Response<List<PastBooking>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<PastBooking> bookings = response.body();
-
-                    Log.d("API_DEBUG", "API Success! Number of bookings: " + bookings.size());
-
                     if (bookings.isEmpty()) {
-                        Toast.makeText(PastBookingsActivity.this, "No past bookings found for this user.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PastBookingsActivity.this, "No past bookings found.", Toast.LENGTH_SHORT).show();
                     } else {
                         recyclerView.setAdapter(new PastBookingAdapter(bookings));
                     }
                 } else {
-                    Log.e("API_DEBUG", "Server Error: " + response.code());
                     Toast.makeText(PastBookingsActivity.this, "Server Error: " + response.code(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<PastBooking>> call, Throwable t) {
-                Log.e("API_DEBUG", "API Call Failed completely: " + t.getMessage());
-                Toast.makeText(PastBookingsActivity.this, "Network/API Failure: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(PastBookingsActivity.this, "Network Failure", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void navigateToHome() {
+        Intent intent = new Intent(PastBookingsActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
     }
 }

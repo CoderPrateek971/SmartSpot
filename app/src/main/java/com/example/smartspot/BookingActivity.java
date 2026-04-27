@@ -4,13 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartspot.api.ApiClient;
 import com.example.smartspot.api.ApiService;
-import com.example.smartspot.model.AdminDashboard;
 import com.example.smartspot.model.BookingResponse;
 import com.example.smartspot.model.VehicleType;
 
@@ -29,16 +37,24 @@ public class BookingActivity extends AppCompatActivity {
     private EditText etVehicleNumber;
     private Button btnConfirm;
     private ImageView ivVehicleIcon;
-    private ProgressBar progressBar; // Added for better UX
+    private ProgressBar progressBar;
 
     private List<VehicleType> vehicleList = new ArrayList<>();
+
+    private int receivedUserId;
+    private int receivedSlotId;
+    private String receivedSlotNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
 
-        // Initialize Views
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Complete Booking");
+        }
+
         spinnerVehicle = findViewById(R.id.spinnerVehicle);
         tvPrice = findViewById(R.id.tvPrice);
         tvSlot = findViewById(R.id.tvSlot);
@@ -46,17 +62,37 @@ public class BookingActivity extends AppCompatActivity {
         btnConfirm = findViewById(R.id.btnConfirm);
         ivVehicleIcon = findViewById(R.id.ivVehicleIcon);
 
-        // If you don't have a progress bar in XML, you can skip this or add one
-        // progressBar = findViewById(R.id.progressBar);
+        receivedUserId = getIntent().getIntExtra("user_id", 1);
+        receivedSlotId = getIntent().getIntExtra("slot_id", -1);
+        receivedSlotNumber = getIntent().getStringExtra("slot_number");
 
-        tvSlot.setText("Selected Slot: A4");
+        if (receivedSlotNumber != null) {
+            tvSlot.setText("Selected Slot: " + receivedSlotNumber);
+        } else {
+            tvSlot.setText("Selected Slot: N/A");
+        }
 
-        // Load data from API
         loadVehicleTypes();
 
         btnConfirm.setOnClickListener(v -> bookSlot());
 
+        ImageView btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void loadVehicleTypes() {
@@ -75,7 +111,7 @@ public class BookingActivity extends AppCompatActivity {
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(
                             BookingActivity.this,
-                            android.R.layout.simple_spinner_dropdown_item, // Better dropdown layout
+                            android.R.layout.simple_spinner_dropdown_item,
                             names
                     );
 
@@ -102,7 +138,6 @@ public class BookingActivity extends AppCompatActivity {
                     VehicleType selected = vehicleList.get(position);
                     tvPrice.setText("₹" + selected.getPrice_per_hour() + "/hour");
 
-                    // Check for null/empty type names before string operations
                     String type = selected.getType_name().toLowerCase();
                     if (type.contains("bike") || type.contains("two-wheeler")) {
                         ivVehicleIcon.setImageResource(R.drawable.bike_icon);
@@ -120,25 +155,28 @@ public class BookingActivity extends AppCompatActivity {
     private void bookSlot() {
         String vehicleNumber = etVehicleNumber.getText().toString().trim();
 
-        // 1. Validate Input
         if (vehicleNumber.isEmpty()) {
             etVehicleNumber.setError("Vehicle number required");
             return;
         }
 
-        // 2. Validate Selection (Prevents crash if API call failed)
         if (vehicleList.isEmpty() || spinnerVehicle.getSelectedItemPosition() == AdapterView.INVALID_POSITION) {
             Toast.makeText(this, "Please wait for vehicle types to load", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        btnConfirm.setEnabled(false); // Prevent multiple clicks
+        if (receivedSlotId == -1) {
+            Toast.makeText(this, "Error: Invalid Slot Selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        btnConfirm.setEnabled(false);
 
         VehicleType selected = vehicleList.get(spinnerVehicle.getSelectedItemPosition());
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("user_id", 1); // Replace with dynamic user ID if available
-        map.put("slot_id", 4);
+        map.put("user_id", receivedUserId);
+        map.put("slot_id", receivedSlotId);
         map.put("vehicle_type_id", selected.getVehicle_type_id());
         map.put("vehicle_number", vehicleNumber);
 
@@ -167,7 +205,6 @@ public class BookingActivity extends AppCompatActivity {
     private void navigateToSuccess(BookingResponse booking) {
         Intent intent = new Intent(this, BookingSuccessActivity.class);
 
-        // Pass data using the keys exactly as your BookingSuccessActivity expects them
         intent.putExtra("slot", booking.getSlot());
         intent.putExtra("vehicle_number", booking.getVehicle_number());
         intent.putExtra("vehicle_type", booking.getVehicle_type());
@@ -176,48 +213,6 @@ public class BookingActivity extends AppCompatActivity {
         intent.putExtra("booking_id", booking.getBooking_id());
 
         startActivity(intent);
-        finish(); // Optional: Close this activity so back button doesn't return here
-    }
-
-    public static class AdminDashboardActivity extends AppCompatActivity {
-
-        TextView totalSlots, occupiedSlots, occupibleSlots, totalRevenue;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_admin_dashboard);
-
-            totalSlots = findViewById(R.id.totalSlots);
-            occupiedSlots = findViewById(R.id.occupiedSlots);
-            occupibleSlots = findViewById(R.id.occupibleSlots);
-            totalRevenue = findViewById(R.id.totalRevenue);
-
-            loadDashboard();
-        }
-
-        private void loadDashboard() {
-            ApiService api = ApiClient.getClient().create(ApiService.class);
-
-            api.getAdminDashboard().enqueue(new Callback<AdminDashboard>() {
-                @Override
-                public void onResponse(Call<AdminDashboard> call, Response<AdminDashboard> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-
-                        AdminDashboard data = response.body();
-
-                        totalSlots.setText(String.valueOf(data.getTotalSlots()));
-                        occupiedSlots.setText(String.valueOf(data.getOccupiedSlots()));
-                        occupibleSlots.setText(String.valueOf(data.getOccupibleSlots()));
-                        totalRevenue.setText("₹" + data.getTotalRevenue());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<AdminDashboard> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        }
+        finish();
     }
 }

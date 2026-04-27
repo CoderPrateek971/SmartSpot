@@ -1,9 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SmartSpot" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <style name="Theme.SmartSpot" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#7EBDAE</item>
+        <item name="colorPrimaryVariant">#2E7D32</item>
+        <item name="colorOnPrimary">@android:color/white</item>
     </style>
 
-    <style name="Theme.SmartSpot" parent="Base.Theme.SmartSpot" />
+    <style name="CircleCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">6dp</item>
+        <item name="shapeAppearanceOverlay">@style/CircleShapeAppearance</item>
+    </style>
+
+    <style name="CircleShapeAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>

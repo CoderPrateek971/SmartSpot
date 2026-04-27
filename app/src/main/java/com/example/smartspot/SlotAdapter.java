@@ -33,8 +33,7 @@ public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.SlotViewHolder
         Slot slot = slotList.get(position);
 
         if (slot != null) {
-            holder.tvSlotNumber.setText("Slot: " + slot.getSlotNumber());
-
+            holder.tvSlotNumber.setText("Slot: " + slot.getSlot_number());
             // Initial UI state based on "1" (Available) or "0" (Occupied)
             boolean isAvailable = slot.getStatus().equals("1");
 

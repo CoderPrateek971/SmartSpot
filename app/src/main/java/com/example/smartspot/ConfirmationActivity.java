@@ -1,9 +1,11 @@
 package com.example.smartspot;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartspot.api.ApiClient;
 import com.example.smartspot.api.ApiService;
@@ -22,6 +24,8 @@ public class ConfirmationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
 
+        NavbarHelper.setupNavbar(this);
+
         slotText = findViewById(R.id.slotText);
         dateText = findViewById(R.id.dateText);
         durationText = findViewById(R.id.durationText);
@@ -32,17 +36,22 @@ public class ConfirmationActivity extends AppCompatActivity {
         invoiceText = findViewById(R.id.invoiceText);
         backArrow = findViewById(R.id.backArrow);
 
-        backArrow.setOnClickListener(v -> finish());
+        backArrow.setOnClickListener(v -> navigateToPastBookings());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToPastBookings();
+            }
+        });
 
         int bookingId = -1;
-
         if (getIntent() != null && getIntent().getExtras() != null) {
             Object idObj = getIntent().getExtras().get("booking_id");
             if (idObj != null) {
                 try {
                     bookingId = Integer.parseInt(idObj.toString());
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
 
@@ -54,50 +63,41 @@ public class ConfirmationActivity extends AppCompatActivity {
         }
     }
 
+    private void navigateToPastBookings() {
+        Intent intent = new Intent(ConfirmationActivity.this, PastBookingsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     private void loadBooking(int id) {
         ApiService api = ApiClient.getClient().create(ApiService.class);
-
         api.getBookingById(id).enqueue(new Callback<Booking>() {
             @Override
             public void onResponse(Call<Booking> call, Response<Booking> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Booking b = response.body();
-
                     invoiceText.setText("Invoice ID : #PKG-2026-" + String.format("%04d", b.getBooking_id()));
                     slotText.setText("Slot: " + b.getSlot());
                     durationText.setText("Duration: " + b.getDuration() + " hr");
                     amountText.setText("Total amount: ₹" + b.getAmount());
                     vehicleText.setText("Vehicle: " + b.getVehicle_no());
 
-                    // ==========================================
-                    // BULLETPROOF PRICE CHECK
-                    // ==========================================
                     double hourlyPrice = b.getPrice();
-
-                    // If Node.js sends 0, calculate it manually (Total Amount / Total Hours)
                     if (hourlyPrice == 0.0) {
                         try {
                             double hours = Double.parseDouble(b.getDuration());
-                            if (hours > 0) {
-                                hourlyPrice = b.getAmount() / hours;
-                            }
-                        } catch (Exception ignored) { }
+                            if (hours > 0) hourlyPrice = b.getAmount() / hours;
+                        } catch (Exception ignored) {}
                     }
-
                     priceText.setText("Price : ₹" + hourlyPrice + "/hr");
-                    // ==========================================
 
                     String cleanDate = b.getDate();
                     if (cleanDate != null && cleanDate.contains("T")) {
                         cleanDate = cleanDate.substring(0, cleanDate.indexOf("T"));
                     }
                     dateText.setText("Date: " + cleanDate);
-
-                    if (b.getPayment_method() != null) {
-                        paymentText.setText("Paid via: " + b.getPayment_method());
-                    } else {
-                        paymentText.setText("Paid via: Card/UPI");
-                    }
+                    paymentText.setText("Paid via: " + (b.getPayment_method() != null ? b.getPayment_method() : "Card/UPI"));
                 } else {
                     Toast.makeText(ConfirmationActivity.this, "Server Error: " + response.code(), Toast.LENGTH_LONG).show();
                 }

@@ -3,61 +3,68 @@ package com.example.smartspot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ActiveBookingActivity extends AppCompatActivity {
 
     private TextView tvTimer, tvSlot, tvVehicle, tvRate;
     private Button btnEndBooking;
+    private ImageView btnBack;
 
     private Handler timerHandler = new Handler();
     private long startTimeMillis = 0L;
-    private String rawRate = "0"; // To store the numeric rate safely
+    private String rawRate = "0";
+
+    private String slot, vehicleNumber, price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_booking);
 
-        // 1. Initialize Views
         tvTimer = findViewById(R.id.tvTimer);
         tvSlot = findViewById(R.id.tvSlot);
         tvVehicle = findViewById(R.id.tvVehicle);
         tvRate = findViewById(R.id.tvRate);
         btnEndBooking = findViewById(R.id.btnEndBooking);
+        btnBack = findViewById(R.id.btnBack);
 
-        // 2. Load Data from Intent with Null Safety
         loadDataFromIntent();
 
-        // 3. Start the Timer
-        startTimeMillis = System.currentTimeMillis();
+        startTimeMillis = getIntent().getLongExtra("start_time_millis", System.currentTimeMillis());
         timerHandler.postDelayed(updateTimerThread, 0);
 
-        // 4. Handle End Booking Click
         btnEndBooking.setOnClickListener(v -> endBooking());
+
+        btnBack.setOnClickListener(v -> navigateToSuccess());
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToSuccess();
+            }
+        });
     }
 
     private void loadDataFromIntent() {
-        // Ensure these keys match exactly what you sent from the previous activity
-        String slot = getIntent().getStringExtra("slot");
-        String vehicle = getIntent().getStringExtra("vehicle_number");
-        String rate = getIntent().getStringExtra("price");
+        slot = getIntent().getStringExtra("slot");
+        vehicleNumber = getIntent().getStringExtra("vehicle_number");
+        price = getIntent().getStringExtra("price");
 
         tvSlot.setText("Slot: " + (slot != null ? slot : "N/A"));
-        tvVehicle.setText("Vehicle: " + (vehicle != null ? vehicle : "Unknown"));
+        tvVehicle.setText("Vehicle: " + (vehicleNumber != null ? vehicleNumber : "Unknown"));
 
-        // Save the raw numeric rate for calculation later
-        if (rate != null && !rate.isEmpty()) {
-            rawRate = rate;
+        if (price != null && !price.isEmpty()) {
+            rawRate = price;
             tvRate.setText("Rate: ₹" + rawRate + "/hr");
         } else {
             rawRate = "0";
-            tvRate.setText("Rate: ₹ -- /hr"); // Looks much cleaner than "Loading..."
+            tvRate.setText("Rate: ₹ -- /hr");
         }
     }
 
@@ -71,9 +78,7 @@ public class ActiveBookingActivity extends AppCompatActivity {
             seconds = seconds % 60;
             minutes = minutes % 60;
 
-            String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-            tvTimer.setText(timeString);
-
+            tvTimer.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
             timerHandler.postDelayed(this, 1000);
         }
     };
@@ -82,15 +87,28 @@ public class ActiveBookingActivity extends AppCompatActivity {
         timerHandler.removeCallbacks(updateTimerThread);
         long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
 
-        // Get the vehicle type ID (this should come from your database/intent)
-        // For this example, I'll assume you have it in a variable called vehicleTypeId
-        int vehicleTypeId = getIntent().getIntExtra("vehicle_type_id", 1);
-
         Intent intent = new Intent(ActiveBookingActivity.this, BillingActivity.class);
         intent.putExtra("elapsed_millis", elapsedMillis);
-        intent.putExtra("vehicle_type_id", vehicleTypeId); // CRUCIAL: Pass the ID
+        intent.putExtra("hourly_rate", rawRate);
+        intent.putExtra("slot", slot);
 
         startActivity(intent);
         finish();
+    }
+
+    private void navigateToSuccess() {
+        Intent intent = new Intent(ActiveBookingActivity.this, BookingSuccessActivity.class);
+        intent.putExtra("slot", slot);
+        intent.putExtra("vehicle_number", vehicleNumber);
+        intent.putExtra("price", rawRate);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timerHandler.removeCallbacks(updateTimerThread);
     }
 }

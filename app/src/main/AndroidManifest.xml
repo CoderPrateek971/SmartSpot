@@ -4,6 +4,7 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,6 +12,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartSpot"
         android:usesCleartextTraffic="true">
@@ -38,6 +40,10 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBlz0agoFjKokYOF2zovdi5LwdKz2FBVFg"/>
         <activity
             android:name=".PaymentSuccessActivity"
             android:exported="false" />
@@ -49,7 +55,13 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".BookingSuccessActivity"
             android:exported="false" />
@@ -58,19 +70,17 @@
             android:exported="false" />
         <activity
             android:name=".AdminDashboardActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".ManageSlotsActivity"
             android:exported="false" />
+
+
     </application>
+
 
 </manifest>
