@@ -47,8 +47,6 @@ The system supports two types of users:
 * View past bookings
 * Customer support system
 
----
-
 ### 🛠️ Admin Features
 
 * Admin Dashboard (Revenue, Occupancy analytics)
@@ -61,7 +59,7 @@ The system supports two types of users:
 
 ## 🧰 Tech Stack
 
-### 📱 Frontend (Android)
+### 📱 Frontend
 
 * Java
 * XML (UI Design)
@@ -78,8 +76,6 @@ The system supports two types of users:
 ---
 
 ## 🏗️ Architecture
-
-The application follows a **Client-Server Architecture**:
 
 ```
 Android App (Frontend)
@@ -104,17 +100,18 @@ Android App (Frontend)
 2. Searches for parking location
 3. Selects slot & vehicle type
 4. Confirms booking
-5. Receives QR Code for entry
-6. Starts parking (live timer begins)
+5. Receives QR Code
+6. Starts parking (live timer)
 7. Ends booking
-8. Billing is generated automatically
-9. Payment is completed
-10. Booking is saved in history
+8. Billing generated automatically
+9. Payment completed
+10. Booking stored in history
 
 ---
 
 ## 📁 Project Structure
 
+```
 ├── api/
 │   ├── ApiClient.java
 │   └── ApiService.java
@@ -149,34 +146,35 @@ Android App (Frontend)
 │   ├── PastBookingAdapter.java
 │   └── TicketAdapter.java
 │
-├── res/layout/
-│   ├── activity_main.xml
-│   ├── activity_login.xml
-│   ├── activity_signup.xml
-│   ├── activity_home.xml
-│   ├── bottom_navbar.xml
-│   ├── activity_booking.xml
-│   ├── activity_confirmation.xml
-│   ├── activity_booking_success.xml
-│   ├── activity_active_booking.xml
-│   ├── activity_billing.xml
-│   ├── activity_payment.xml
-│   ├── activity_payment_success.xml
-│   ├── activity_profile.xml
-│   ├── activity_edit_profile.xml
-│   ├── activity_past_bookings.xml
-│   ├── activity_support.xml
-│   ├── activity_admin_dashboard.xml
-│   ├── activity_manage_slots.xml
-│   ├── activity_pricing.xml
-│   ├── item_past_booking.xml
-│   ├── item_ticket.xml
-│   └── slot_item.xml
+├── res/
+│   ├── layout/
+│   │   ├── activity_main.xml
+│   │   ├── activity_login.xml
+│   │   ├── activity_signup.xml
+│   │   ├── activity_home.xml
+│   │   ├── bottom_navbar.xml
+│   │   ├── activity_booking.xml
+│   │   ├── activity_confirmation.xml
+│   │   ├── activity_booking_success.xml
+│   │   ├── activity_active_booking.xml
+│   │   ├── activity_billing.xml
+│   │   ├── activity_payment.xml
+│   │   ├── activity_payment_success.xml
+│   │   ├── activity_profile.xml
+│   │   ├── activity_edit_profile.xml
+│   │   ├── activity_past_bookings.xml
+│   │   ├── activity_support.xml
+│   │   ├── activity_admin_dashboard.xml
+│   │   ├── activity_manage_slots.xml
+│   │   ├── activity_pricing.xml
+│   │   ├── item_past_booking.xml
+│   │   ├── item_ticket.xml
+│   │   └── slot_item.xml
+│   │
+│   └── values/
+│       └── themes.xml
 │
-├── res/values/
-│   └── themes.xml
-│
-├── AndroidManifest.xml
+└── AndroidManifest.xml
 ```
 
 ---
@@ -186,28 +184,27 @@ Android App (Frontend)
 ### 🔹 Retrofit
 
 * Type-safe HTTP client for Android
-* Handles API requests and responses efficiently
+* Handles API requests and responses
 
 ### 🔹 Gson
 
 * Converts JSON ↔ Java objects
-* Used for parsing backend responses
 
 ### 🔹 Volley
 
-* Used for lightweight network requests (Login, Signup)
+* Used for lightweight requests (Login, Signup)
 
 ### 🔹 HttpURLConnection
 
-* Used for manual API handling in specific cases
+* Used for manual API handling
 
 ### 🔹 RecyclerView
 
-* Efficiently displays lists (slots, bookings, tickets)
+* Efficient list rendering (slots, bookings, tickets)
 
 ### 🔹 Material Design Components
 
-* Provides modern UI elements (Buttons, Cards, Inputs)
+* Modern UI components
 
 ---
 
@@ -217,7 +214,7 @@ Android App (Frontend)
 
 * Android Studio
 * Java SDK
-* Node.js (for backend)
+* Node.js
 * SQL Database
 
 ### Steps
@@ -228,23 +225,23 @@ Android App (Frontend)
 git clone https://github.com/your-username/smartspot.git
 ```
 
-2. Open the project in Android Studio
+2. Open in Android Studio
 
-3. Configure backend API URL in:
+3. Configure API base URL in:
 
 ```
 ApiClient.java
 ```
 
-4. Run the app on emulator or physical device
+4. Run on emulator or physical device
 
 ---
 
 ## 🚀 Future Scope
 
-* Real-time GPS tracking of parking slots
-* AI-based parking availability prediction
-* Integration with payment gateways (Razorpay/Stripe)
+* Real-time GPS tracking
+* AI-based parking prediction
+* Payment gateway integration (Razorpay/Stripe)
 * Push notifications
 * Multi-city support
 * Cloud deployment
@@ -263,7 +260,7 @@ ApiClient.java
 
 ## 📌 Conclusion
 
-SmartSpot provides a scalable and efficient parking management system by combining real-time data, automation, and a user-friendly interface. It reduces parking search time, improves user convenience, and enhances operational efficiency for administrators.
+SmartSpot provides a scalable and efficient parking management system by combining real-time data, automation, and a user-friendly interface. It reduces parking search time and improves operational efficiency.
 
 ---
 
