@@ -31,7 +31,6 @@ public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.SlotViewHolder
     public SlotAdapter(Context context, List<Slot> slotList) {
         this.context = context;
         this.slotList = slotList;
-        // Initialize API Service
         this.apiService = ApiClient.getClient().create(ApiService.class);
     }
 
@@ -49,39 +48,31 @@ public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.SlotViewHolder
         if (slot != null) {
             holder.tvSlotNumber.setText("Slot: " + slot.getSlot_number());
 
-            // Check if slot is active/enabled.
-            // Using isActive() because HomeActivity filters by it!
+
             boolean isAvailable = (slot.getIsActive() == 1) || "1".equals(slot.getStatus());
 
-            // 1. Reset listener to null before setting state to avoid logic loops
             holder.switchStatus.setOnCheckedChangeListener(null);
             holder.switchStatus.setChecked(isAvailable);
             updateStatusText(holder.tvStatus, isAvailable);
 
-            // 2. Set the actual listener
             holder.switchStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-                // Temporarily save old values in case API fails
                 int oldIsActive = slot.getIsActive();
                 String oldStatus = slot.getStatus();
 
-                // Optimistically update the local model & UI
                 slot.setIsActive(isChecked ? 1 : 0);
                 slot.setStatus(isChecked ? "1" : "0");
                 updateStatusText(holder.tvStatus, isChecked);
 
-                // 3. Make the API Call to backend
                 apiService.updateSlotStatus(slot).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(context, "Slot " + slot.getSlot_number() + " Updated!", Toast.LENGTH_SHORT).show();
                         } else {
-                            // If backend returns an error (404, 500)
                             Log.e("API_ERROR", "Update Failed. Code: " + response.code());
                             Toast.makeText(context, "Failed to update database", Toast.LENGTH_SHORT).show();
 
-                            // Revert the changes
                             revertSwitchState(holder, slot, oldIsActive, oldStatus);
                         }
                     }
@@ -91,7 +82,6 @@ public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.SlotViewHolder
                         Log.e("API_ERROR", "Network Error: " + t.getMessage());
                         Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
 
-                        // Revert the changes
                         revertSwitchState(holder, slot, oldIsActive, oldStatus);
                     }
                 });
@@ -99,12 +89,10 @@ public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.SlotViewHolder
         }
     }
 
-    // Helper method to safely revert the UI if the backend call fails
     private void revertSwitchState(SlotViewHolder holder, Slot slot, int oldIsActive, String oldStatus) {
         slot.setIsActive(oldIsActive);
         slot.setStatus(oldStatus);
 
-        // Trigger a safe UI refresh for this specific item
         int currentPos = holder.getAdapterPosition();
         if (currentPos != RecyclerView.NO_POSITION) {
             notifyItemChanged(currentPos);

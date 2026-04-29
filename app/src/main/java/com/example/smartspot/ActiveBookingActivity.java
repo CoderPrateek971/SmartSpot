@@ -21,7 +21,7 @@ public class ActiveBookingActivity extends AppCompatActivity {
     private String rawRate = "0";
 
     private String slot, vehicleNumber, price;
-    private int bookingId; // Add this variable!
+    private int bookingId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,6 @@ public class ActiveBookingActivity extends AppCompatActivity {
         vehicleNumber = getIntent().getStringExtra("vehicle_number");
         price = getIntent().getStringExtra("price");
 
-        // GRAB THE BOOKING ID SO WE DON'T LOSE IT!
         bookingId = getIntent().getIntExtra("booking_id", -1);
 
         tvSlot.setText("Slot: " + (slot != null ? slot : "N/A"));
@@ -96,7 +95,6 @@ public class ActiveBookingActivity extends AppCompatActivity {
         intent.putExtra("hourly_rate", rawRate);
         intent.putExtra("slot", slot);
 
-        // PASS THE BOOKING ID TO BILLING SO IT CAN CALL THE API
         intent.putExtra("booking_id", bookingId);
 
         startActivity(intent);

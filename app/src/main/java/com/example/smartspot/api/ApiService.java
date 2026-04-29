@@ -22,39 +22,39 @@ import retrofit2.http.Path;
 
 public interface ApiService {
 
-    // ================= USERS =================
+    //  USERS
     @GET("users")
     Call<List<User>> getUsers();
 
-    // ================= VEHICLE TYPES =================
+    //  VEHICLE TYPES
     @GET("vehicle-types")
     Call<List<VehicleType>> getVehicleTypes();
 
-    // ================= SLOTS =================
+    // SLOTS
 
-    // For Admin: Fetch every slot for management
+    // For Admin: to fetch all slots so that admin can view
     @GET("slots/all")
     Call<List<Slot>> getAllSlots();
 
-    // For User: Fetch only active/enabled slots
+    // For User: to fetch active/enabled slots
     @GET("slots/available")
     Call<List<Slot>> getAvailableSlots();
 
-    // For Admin: Toggle Enable/Disable via the Slot object
+    // For Admin:slots toggle
     @POST("slots/update-status")
     Call<Void> updateSlotStatus(@Body Slot slot);
 
     @POST("slots/add")
     Call<HashMap<String, Object>> addSlot(@Body HashMap<String, Object> data);
 
-    // ================= PRICING =================
+    // PRICING
     @GET("pricing")
     Call<Pricing> getPricing();
 
     @POST("pricing/update")
     Call<Void> updatePricing(@Body Pricing request);
 
-    // ================= BOOKING =================
+    //  BOOKING
     @POST("book-slot")
     Call<BookingResponse> bookSlot(@Body HashMap<String, Object> bookingData);
 
@@ -70,11 +70,11 @@ public interface ApiService {
     @GET("past-bookings/{user_id}")
     Call<List<PastBooking>> getPastBookings(@Path("user_id") int userId);
 
-    // ================= ADMIN DASHBOARD =================
+    // ADMIN DASHBOARD
     @GET("admin/dashboard")
     Call<AdminDashboard> getAdminDashboard();
 
-    // ================= SUPPORT =================
+    //  SUPPORT
     @POST("support/create")
     Call<Map<String, Object>> createComplaint(@Body Map<String, Object> body);
 

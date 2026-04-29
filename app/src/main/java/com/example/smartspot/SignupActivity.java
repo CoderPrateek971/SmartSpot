@@ -2,6 +2,7 @@ package com.example.smartspot;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.smartspot.api.ApiClient;
 
 import org.json.JSONObject;
 
@@ -23,7 +25,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText etName, etEmail, etPassword, etConfirmPassword, etPhone;
     AutoCompleteTextView spVehicle;
     Button btnSignup;
-    ImageView btnBack; // Declared Back Button
+    ImageView btnBack;
 
     String[] types = {"Bike", "Car"};
 
@@ -39,7 +41,7 @@ public class SignupActivity extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         spVehicle = findViewById(R.id.spVehicle);
         btnSignup = findViewById(R.id.btnSignup);
-        btnBack = findViewById(R.id.btnBack); // Initialize Back Button
+        btnBack = findViewById(R.id.btnBack);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, types);
@@ -47,10 +49,8 @@ public class SignupActivity extends AppCompatActivity {
 
         btnSignup.setOnClickListener(v -> registerUser());
 
-        // Handle on-screen Back button click
         btnBack.setOnClickListener(v -> navigateToLogin());
 
-        // Handle physical device back button / gesture swipe
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -59,7 +59,6 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    // Helper method to go back to login screen smoothly
     private void navigateToLogin() {
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -91,8 +90,8 @@ public class SignupActivity extends AppCompatActivity {
 
     private void sendDataToServer(String name, String email, String password, String phone, String vehicle) {
 
-        // Change this URL to match your actual server IP if you are testing on a real device
-        String url = "http://10.7.34.70:3000/signup";
+
+        String url = ApiClient.BASE_URL+"users";
 
         JSONObject json = new JSONObject();
         try {
@@ -109,11 +108,20 @@ public class SignupActivity extends AppCompatActivity {
                 json,
                 response -> {
                     Toast.makeText(SignupActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
-                    navigateToLogin(); // Use the helper method here too!
+                    navigateToLogin();
                 },
                 error -> {
-                    Toast.makeText(SignupActivity.this, "User Already Exist or Network Error", Toast.LENGTH_SHORT).show();
+                    String errorMsg = "Unknown Error";
+                    if (error.networkResponse != null) {
+                        errorMsg = "Server Error: Code " + error.networkResponse.statusCode;
+                    } else {
+                        errorMsg = "Network Blocked/Timeout! Check Mac Firewall or IP.";
+                    }
+
+                    Toast.makeText(SignupActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                    Log.e("VOLLEY_ERROR", error.toString());
                 }
+
         );
 
         Volley.newRequestQueue(this).add(request);

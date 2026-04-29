@@ -5,10 +5,12 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView; // Added
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.smartspot.api.ApiClient;
 
 import org.json.JSONObject;
 
@@ -20,7 +22,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText username, email, password, confirmPassword, phone;
     Button saveBtn;
-    ImageView btnBack; // Added
+    ImageView btnBack;
 
     int userId;
 
@@ -29,7 +31,6 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // 1. Initialize all views
         btnBack = findViewById(R.id.btnBack);
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
@@ -38,12 +39,10 @@ public class EditProfileActivity extends AppCompatActivity {
         phone = findViewById(R.id.phone);
         saveBtn = findViewById(R.id.saveBtn);
 
-        // 2. Handle Back Button Click
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
         }
 
-        // Get user_id from SharedPreferences
         android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = pref.getInt("userId", -1);
 
@@ -52,7 +51,6 @@ public class EditProfileActivity extends AppCompatActivity {
             finish();
         }
 
-        // Handle Save Button Click
         saveBtn.setOnClickListener(v -> updateProfile());
     }
 
@@ -80,7 +78,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         new Thread(() -> {
             try {
-                URL url = new URL("http://10.0.2.2:3000/updateProfile");
+                URL url = new URL(ApiClient.BASE_URL+"updateProfile");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");

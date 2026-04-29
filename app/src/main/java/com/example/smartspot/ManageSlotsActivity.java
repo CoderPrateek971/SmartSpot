@@ -1,63 +1,3 @@
-//package com.example.smartspot;
-//
-//import android.os.Bundle;
-//import android.widget.ImageView;
-//import android.widget.LinearLayout;
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.recyclerview.widget.LinearLayoutManager;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import com.example.smartspot.model.Slot;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class ManageSlotsActivity extends AppCompatActivity {
-//
-//    private RecyclerView recyclerView;
-//    private SlotAdapter adapter;
-//    private List<Slot> slotList = new ArrayList<>();
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_manage_slots);
-//
-//        // 1. Initialize RecyclerView
-//        recyclerView = findViewById(R.id.recyclerSlots);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//
-//        setupHardcodedSlots();
-//
-//        adapter = new SlotAdapter(this, slotList);
-//        recyclerView.setAdapter(adapter);
-//
-//        // 2. Back Button Logic
-//        ImageView btnBack = findViewById(R.id.btnBack);
-//        btnBack.setOnClickListener(v -> finish());
-//
-//        // 3. Bottom Nav Home
-//        LinearLayout btnHome = findViewById(R.id.btnHome);
-//        btnHome.setOnClickListener(v -> {
-//            // Goes back to the previous screen (usually dashboard)
-//            finish();
-//        });
-//
-//        // 4. Bottom Nav Sign Out
-//        LinearLayout btnSignOut = findViewById(R.id.btnSignOut);
-//        btnSignOut.setOnClickListener(v -> {
-//            // Add your logout logic here (clearing preferences, etc.)
-//            finish();
-//        });
-//    }
-//
-//    private void setupHardcodedSlots() {
-//        slotList.clear();
-//        for (int i = 1; i <= 6; i++) {
-//            slotList.add(new Slot("A0" + i, "1"));
-//        }
-//    }
-//}
-
 package com.example.smartspot;
 
 import android.content.Intent;
@@ -95,34 +35,27 @@ public class ManageSlotsActivity extends AppCompatActivity {
 
         apiService = ApiClient.getClient().create(ApiService.class);
 
-        // 1. Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerSlots);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Setup Adapter
         adapter = new SlotAdapter(this, slotList);
         recyclerView.setAdapter(adapter);
 
-        // Fetch real slots from Backend instead of hardcoded ones
         loadSlotsFromAPI();
 
-        // 2. Back Button Logic
         ImageView btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {
-            onBackPressed(); // This properly triggers the back action
+            onBackPressed();
         });
 
-        // 3. Bottom Nav Home
         LinearLayout btnHome = findViewById(R.id.btnHome);
         btnHome.setOnClickListener(v -> {
-            // Change AdminDashboardActivity.class to your actual Home screen for Admin
             Intent intent = new Intent(ManageSlotsActivity.this, AdminDashboardActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
         });
 
-        // 4. Bottom Nav Sign Out
         LinearLayout btnSignOut = findViewById(R.id.btnSignOut);
         btnSignOut.setOnClickListener(v -> {
             Toast.makeText(this, "Signing out...", Toast.LENGTH_SHORT).show();

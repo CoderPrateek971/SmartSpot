@@ -46,7 +46,6 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"/>
 
-        <!-- Added clipToPadding and paddingBottom for better scrolling feel -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"

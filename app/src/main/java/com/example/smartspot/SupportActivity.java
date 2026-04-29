@@ -3,7 +3,7 @@ package com.example.smartspot;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView; // Added
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -30,7 +30,7 @@ public class SupportActivity extends AppCompatActivity {
     EditText description;
     Button submitBtn;
     RecyclerView recycler;
-    ImageView btnBack; // Added
+    ImageView btnBack;
 
     int userId;
 
@@ -39,24 +39,22 @@ public class SupportActivity extends AppCompatActivity {
         super.onCreate(b);
         setContentView(R.layout.activity_support);
 
-        // Navbar logic (if applicable)
         NavbarHelper.setupNavbar(this);
 
         categoryGroup = findViewById(R.id.categoryGroup);
         description = findViewById(R.id.description);
         submitBtn = findViewById(R.id.submitBtn);
         recycler = findViewById(R.id.recycler);
-        btnBack = findViewById(R.id.btnBack); // Make sure this ID matches your XML
+        btnBack = findViewById(R.id.btnBack);
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
 
-        // Setup Back Button click
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
         }
 
-        userId = getSharedPreferences("USER", MODE_PRIVATE)
-                .getInt("user_id", -1);
+        userId = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                .getInt("userId", -1);
 
         loadTickets();
 
@@ -81,7 +79,8 @@ public class SupportActivity extends AppCompatActivity {
         }
 
         if (userId == -1) {
-            userId = 1;
+            Toast.makeText(this, "Error: User not logged in!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         Map<String, Object> body = new HashMap<>();
@@ -111,11 +110,13 @@ public class SupportActivity extends AppCompatActivity {
     }
 
     private void loadTickets() {
-        int fetchId = (userId == -1) ? 1 : userId;
+        if (userId == -1) {
+            return;
+        }
 
         ApiService api = ApiClient.getClient().create(ApiService.class);
 
-        api.getUserComplaints(fetchId).enqueue(new Callback<List<SupportTicket>>() {
+        api.getUserComplaints(userId).enqueue(new Callback<List<SupportTicket>>() {
             @Override
             public void onResponse(Call<List<SupportTicket>> call, Response<List<SupportTicket>> res) {
                 if (res.isSuccessful() && res.body() != null) {

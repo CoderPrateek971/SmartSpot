@@ -94,34 +94,27 @@ public class HomeActivity extends AppCompatActivity {
                     slotList.clear();
                     List<String> names = new ArrayList<>();
 
-                    // Reset Map Pins (hide them all first)
                     for (View pin : mapButtons.values()) {
                         if (pin != null) pin.setVisibility(View.GONE);
                     }
 
-                    // Loop through the slots sent by the backend
                     for (Slot s : response.body()) {
 
-                        // REMOVED the "s.getIsActive() == 1" check!
-                        // The backend already did the filtering for us.
 
                         slotList.add(s);
                         String sNum = s.getSlot_number();
                         names.add(sNum);
 
-                        // Show pin on map if it exists
                         if (mapButtons.containsKey(sNum)) {
                             View targetPin = mapButtons.get(sNum);
                             if (targetPin != null) targetPin.setVisibility(View.VISIBLE);
                         }
                     }
 
-                    // Attach the names to the dropdown spinner
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(HomeActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, names);
                     slotSpinner.setAdapter(adapter);
 
-                    // If the list is STILL empty, it means DB actually has no available slots
                     if (slotList.isEmpty()) {
                         Toast.makeText(HomeActivity.this, "No parking slots are currently enabled.", Toast.LENGTH_LONG).show();
                     }

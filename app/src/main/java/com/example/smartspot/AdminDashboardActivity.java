@@ -23,7 +23,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
     CardView btnManageSlots, btnPriceManagement;
     ImageView backArrow;
 
-    // 1. Declare the bottom navigation buttons
     LinearLayout btnHome, btnSignOut;
 
     @Override
@@ -39,44 +38,34 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnPriceManagement = findViewById(R.id.btnPriceManagement);
         backArrow = findViewById(R.id.backArrow);
 
-        // 2. Initialize bottom navigation buttons
         btnHome = findViewById(R.id.btnHome);
         btnSignOut = findViewById(R.id.btnSignOut);
 
-        // --- CLICK LISTENERS ---
 
-        // Back Arrow
         backArrow.setOnClickListener(v -> {
-            onBackPressed(); // Better than finish(), triggers standard system back behavior
+            onBackPressed();
         });
 
-        // Manage Slots Card
         btnManageSlots.setOnClickListener(v ->
                 startActivity(new Intent(this, ManageSlotsActivity.class)));
 
-        // Price Management Card
         btnPriceManagement.setOnClickListener(v ->
                 startActivity(new Intent(this, PricingActivity.class)));
 
-        // Bottom Nav: Home Button
         btnHome.setOnClickListener(v -> {
-            // Since this IS the home screen for the admin, we just refresh the data
             Toast.makeText(AdminDashboardActivity.this, "Refreshing Dashboard...", Toast.LENGTH_SHORT).show();
             loadDashboard();
         });
 
-        // Bottom Nav: Sign Out Button
         btnSignOut.setOnClickListener(v -> {
             Toast.makeText(AdminDashboardActivity.this, "Signing Out...", Toast.LENGTH_SHORT).show();
 
-            // Go to Login Activity and clear back stack so user can't press back to return
             Intent intent = new Intent(AdminDashboardActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         });
 
-        // Load data from backend
         loadDashboard();
     }
 

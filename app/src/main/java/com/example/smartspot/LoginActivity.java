@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.smartspot.api.ApiClient;
+
 import org.json.JSONObject;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -21,7 +24,6 @@ public class LoginActivity extends AppCompatActivity {
     Button loginBtn;
     TextView signupText, toggleUser, toggleAdmin;
 
-    // Track if user or admin is selected
     private boolean isAdminSelected = false;
 
     @Override
@@ -36,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
         toggleUser = findViewById(R.id.toggleUser);
         toggleAdmin = findViewById(R.id.toggleAdmin);
 
-        // UI Logic for Toggle Selection
         toggleUser.setOnClickListener(v -> {
             isAdminSelected = false;
             toggleUser.setBackgroundResource(R.drawable.selected_toggle);
@@ -71,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
         new Thread(() -> {
             try {
-                URL url = new URL("http://10.0.2.2:3000/login");
+                URL url = new URL(ApiClient.BASE_URL+"login");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
@@ -80,7 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject json = new JSONObject();
                 json.put("username", user);
                 json.put("password", pass);
-                // SEND THE TOGGLE STATE TO SERVER
                 json.put("isAdminMode", isAdminSelected);
 
                 OutputStream os = conn.getOutputStream();
@@ -95,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject resObj = new JSONObject(response);
                 boolean success = resObj.getBoolean("success");
 
-                // 1. Declare a variable to hold the ID so we can pass it to the Intent later
                 int tempId = -1;
 
                 if (success) {
@@ -104,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                     pref.edit().putInt("userId", tempId).apply();
                 }
 
-                // Make it final so it can be used inside runOnUiThread
                 final int finalLoggedInId = tempId;
 
                 runOnUiThread(() -> {
@@ -113,13 +111,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         Intent intent;
                         if (isAdminSelected) {
-                            // GO TO ADMIN DASHBOARD
                             intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
                         } else {
-                            // GO TO USER HOME
                             intent = new Intent(LoginActivity.this, HomeActivity.class);
 
-                            // 2. THIS IS THE FIX! We pass the ID to HomeActivity
                             intent.putExtra("user_id", finalLoggedInId);
                         }
                         startActivity(intent);

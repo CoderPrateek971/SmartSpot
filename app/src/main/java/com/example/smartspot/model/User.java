@@ -22,7 +22,7 @@ public class User {
     @SerializedName("created_at")
     private String createdAt;
 
-    // Getters
+
     public int getUserId() { return userId; }
     public String getFullName() { return fullName; }
     public String getEmail() { return email; }

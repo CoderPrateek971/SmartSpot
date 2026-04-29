@@ -11,7 +11,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Back Button -->
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="24dp"
@@ -19,7 +18,6 @@
             android:src="@drawable/ic_back_arrow"
             android:layout_marginBottom="10dp"/>
 
-        <!-- Logo -->
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -27,7 +25,6 @@
             android:src="@mipmap/ic_launcher"
             android:layout_marginBottom="8dp"/>
 
-        <!-- App Name -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +34,6 @@
             android:layout_gravity="center"
             android:textColor="#000"/>
 
-        <!-- Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +44,6 @@
             android:layout_gravity="center"
             android:textColor="#000"/>
 
-        <!-- Username -->
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
@@ -58,7 +53,6 @@
             android:padding="12dp"
             android:layout_marginTop="20dp"/>
 
-        <!-- Email -->
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
@@ -69,7 +63,6 @@
             android:padding="12dp"
             android:layout_marginTop="10dp"/>
 
-        <!-- Password -->
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
@@ -80,7 +73,6 @@
             android:padding="12dp"
             android:layout_marginTop="10dp"/>
 
-        <!-- Confirm Password -->
         <EditText
             android:id="@+id/confirmPassword"
             android:layout_width="match_parent"
@@ -91,7 +83,6 @@
             android:padding="12dp"
             android:layout_marginTop="10dp"/>
 
-        <!-- Phone -->
         <EditText
             android:id="@+id/phone"
             android:layout_width="match_parent"
@@ -102,7 +93,6 @@
             android:padding="12dp"
             android:layout_marginTop="10dp"/>
 
-        <!-- Save Button -->
         <Button
             android:id="@+id/saveBtn"
             android:layout_width="match_parent"
@@ -113,7 +103,6 @@
             android:background="@drawable/button_bg"
             android:layout_marginTop="20dp"/>
 
-        <!-- Bottom spacing -->
         <Space
             android:layout_width="match_parent"
             android:layout_height="80dp"/>

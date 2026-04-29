@@ -47,7 +47,9 @@ public class PastBookingsActivity extends AppCompatActivity {
             }
         });
 
-        int userId = 1;
+        android.content.SharedPreferences pref = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+
+        int userId = pref.getInt("userId", -1);
 
         if (userId == -1) {
             Toast.makeText(this, "Error: User not logged in", Toast.LENGTH_LONG).show();

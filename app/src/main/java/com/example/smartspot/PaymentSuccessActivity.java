@@ -10,20 +10,17 @@ public class PaymentSuccessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_success); // Your invoice XML!
+        setContentView(R.layout.activity_payment_success);
 
-        // 🚨 THIS IS THE FIX! This activates the bottom navbar buttons 🚨
         NavbarHelper.setupNavbar(this);
 
         TextView invoiceId = findViewById(R.id.invoiceId);
         TextView amountPaid = findViewById(R.id.amountPaid);
         TextView viewPastBookings = findViewById(R.id.viewPastBookings);
 
-        // Get data passed from PaymentActivity
         int bookingId = getIntent().getIntExtra("booking_id", 0);
         String amount = getIntent().getStringExtra("amount");
 
-        // Set the UI
         if (invoiceId != null) {
             invoiceId.setText("Invoice ID: #PKNG-" + String.format("%04d", bookingId));
         }
@@ -31,13 +28,10 @@ public class PaymentSuccessActivity extends AppCompatActivity {
             amountPaid.setText("Amount Paid: ₹" + amount);
         }
 
-        // "View Past Bookings" text button
         if (viewPastBookings != null) {
             viewPastBookings.setOnClickListener(v -> {
-                // Fixed: Actually go to Past Bookings instead of Home Activity
                 Intent intent = new Intent(PaymentSuccessActivity.this, PastBookingsActivity.class);
 
-                // Pass user ID just in case your PastBookings needs it
                 int userId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getInt("userId", -1);
                 intent.putExtra("user_id", userId);
 

@@ -12,13 +12,11 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Logo -->
         <ImageView
             android:layout_width="120dp"
             android:layout_height="60dp"
             android:layout_centerInParent="true"
             android:src="@drawable/logo" />
-        <!-- Toggle -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +45,6 @@
                 android:clickable="true"
                 android:focusable="true"/>
         </LinearLayout>
-        <!-- Username -->
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
@@ -58,7 +55,6 @@
             android:padding="12dp"
             android:layout_marginTop="30dp"/>
 
-        <!-- Password -->
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
@@ -69,7 +65,6 @@
             android:padding="12dp"
             android:layout_marginTop="12dp"/>
 
-        <!-- Forgot -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +73,6 @@
             android:layout_gravity="end"
             android:layout_marginTop="8dp"/>
 
-        <!-- Login Button -->
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="match_parent"
@@ -88,14 +82,12 @@
             android:background="@drawable/button_bg"
             android:layout_marginTop="25dp"/>
 
-        <!-- OR -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Or"
             android:layout_marginTop="20dp"/>
 
-        <!-- Social -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,13 +123,11 @@
 
         </LinearLayout>
 
-        <!-- PUSH BOTTOM -->
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-        <!-- Signup -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

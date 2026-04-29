@@ -23,7 +23,6 @@ public class PricingActivity extends AppCompatActivity {
     EditText etCar, etBike;
     Button btnSave;
 
-    // 1. Declare the missing views
     ImageView btnBack;
     LinearLayout navHome, navLogout;
 
@@ -34,7 +33,6 @@ public class PricingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pricing);
 
-        // 2. Initialize the views
         etCar = findViewById(R.id.etCar);
         etBike = findViewById(R.id.etBike);
         btnSave = findViewById(R.id.btnSave);
@@ -46,36 +44,27 @@ public class PricingActivity extends AppCompatActivity {
 
         loadPricing();
 
-        // ================= BUTTON LISTENERS =================
 
-        // Back Button
         btnBack.setOnClickListener(v -> {
-            onBackPressed(); // This goes back to the previous screen
+            onBackPressed();
         });
 
-        // Home Navigation Button
         navHome.setOnClickListener(v -> {
-            // Change 'AdminDashboardActivity.class' to whatever your actual home screen is named!
             Intent intent = new Intent(PricingActivity.this, AdminDashboardActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
         });
 
-        // Logout Navigation Button
         navLogout.setOnClickListener(v -> {
-            // TODO: Clear any SharedPreferences/User Session here if you have them
 
             Toast.makeText(PricingActivity.this, "Signing Out...", Toast.LENGTH_SHORT).show();
-            // Change 'LoginActivity.class' to your actual login screen name!
             Intent intent = new Intent(PricingActivity.this, LoginActivity.class);
-            // These flags clear the back-stack so the user can't press "Back" to re-enter the app
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         });
 
-        // Save Pricing Button
         btnSave.setOnClickListener(v -> {
             String carText = etCar.getText().toString();
             String bikeText = etBike.getText().toString();

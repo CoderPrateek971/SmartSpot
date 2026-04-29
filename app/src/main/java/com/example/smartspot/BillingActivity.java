@@ -11,7 +11,6 @@ public class BillingActivity extends AppCompatActivity {
     TextView tvTime, tvRate, tvTotal;
     Button btnPayNow;
 
-    // 1. Declare class-level variables
     double totalAmount = 0.0;
     int bookingId;
 
@@ -25,7 +24,6 @@ public class BillingActivity extends AppCompatActivity {
         tvTotal = findViewById(R.id.tvTotal);
         btnPayNow = findViewById(R.id.btnPayNow);
 
-        // 2. Retrieve the booking_id from the intent
         bookingId = getIntent().getIntExtra("booking_id", -1);
 
         long totalMillis = getIntent().getLongExtra("elapsed_millis", 0);
@@ -54,7 +52,7 @@ public class BillingActivity extends AppCompatActivity {
 
             Intent intent = new Intent(BillingActivity.this, PaymentActivity.class);
             intent.putExtra("amount", finalAmountString);
-            intent.putExtra("booking_id", bookingId); // Now the compiler knows what this is!
+            intent.putExtra("booking_id", bookingId);
             startActivity(intent);
         });
     }

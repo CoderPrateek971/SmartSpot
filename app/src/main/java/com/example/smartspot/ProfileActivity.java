@@ -12,6 +12,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.smartspot.api.ApiClient;
 
 import org.json.JSONObject;
 
@@ -28,7 +29,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Initialize Navbar Logic
         NavbarHelper.setupNavbar(this);
 
         tvUsername = findViewById(R.id.tvUsername);
@@ -46,10 +46,8 @@ public class ProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         btnEditProfile.setOnClickListener(v -> {
-            // Redirect specifically to EditProfileActivity
             Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
 
-            // Pass the user_id so the edit screen knows which data to load
             intent.putExtra("user_id", userId);
 
             startActivity(intent);
@@ -69,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void fetchUserData() {
-        String url = "http://10.0.2.2:3000/users";
+        String url = ApiClient.BASE_URL+"users";
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
